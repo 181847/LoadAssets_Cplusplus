@@ -42,4 +42,4 @@ DirectX::XMMATRIX XM_CALLCONV InvOnlyWithRT(
 bool FloatEqual(float target, float compare, float M_EPSINON);
 
 DirectX::XMVECTOR XM_CALLCONV ConvertFromWorldToLocal(
-	DirectX::FXMMATRIX worldTransformation, DirectX::CXMVECTOR worldPosition);
+DirectX::FXMMATRIX worldTransformation, DirectX::CXMVECTOR worldPosition);
