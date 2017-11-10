@@ -15,14 +15,12 @@ public:
 
 	inline std::string SimpleException::ToString()
 	{
-		char lineString[40];
+		char lineString[256];
 		std::string returnval;
-		_itoa_s(line, lineString, 10);
-		returnval += "\nFile:\n";
-		returnval += file;
-		returnval += "\nLine:\n";
+
+		sprintf_s(lineString, "\nFile:\t\t%s\nLine:\t\t%d\nExperssion:\t%s", file, line, expr, 256);
+
 		returnval += lineString;
-		returnval += "\nExpression:\n";
 		return returnval;
 	}
 };
