@@ -2,29 +2,32 @@
 This script is used to config the interpretoer,
 such as adding the search patch.
 --]]
-pathes = {}
-pathes[#pathes + 1] = "D:\\GitHub\\Lua\\LoadAssets\\?.lua"
 
-
-for i = 1, #pathes do
-    package.path = package.path..";"..pathes[i]
+local function AddPath(path)
+    package.path = package.path..";"..path
 end
 
+AddPath("D:\\GitHub\\Lua\\LoadAssets\\?.lua")
+AddPath(".\\luaScript\\?.lua")
 
 -- store the original 'loadfile', replace it with loadfileInPath
 old_loadfile = loadfile
 
 -- modify the loadfile function,
--- enable the function can search through the package.path, 
+-- enable the function the ability to search through the package.path, 
 -- not just in current folder.
 -- notice that if the fileName end with ".lua", 
 -- ".lua" will be removed.
-loadfile = function(fileName)
+loadfile = function(filePath)
     -- remove the ".lua" in the end.
-    fileName = string.match(fileName, "(%w-).lua$") or fileName
+    fileName = string.match(filePath, "(%w-).lua$") or filePath
     
     -- use the searchpath to find the actual path for the file
     fileName = package.searchpath(fileName, package.path)
     
-    return old_loadfile(fileName)
+    if fileName then
+        return old_loadfile(fileName)
+    else
+        error("no such file:\n\t"..filePath)
+    end
 end
