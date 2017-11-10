@@ -2,16 +2,20 @@
 //
 
 #include "stdafx.h"
+#include "LuaInterpreter.h"
+#include <memory>
 
 
 int main()
 {
-	lua_State * L = luaL_newstate();
-	char lua_buff[255];
-	int error;
-	luaL_openlibs(L);
+	std::unique_ptr<LuaInterpreter> luaInter = std::make_unique<LuaInterpreter>();
+
+	luaInter->Run();
+
 
 	
+	fprintf(stdout, "Program terminate.");
+	getchar();
     return 0;
 }
 
