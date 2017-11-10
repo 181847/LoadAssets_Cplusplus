@@ -20,7 +20,7 @@ void LuaInterpreter::Run()
 		error = luaL_loadstring(m_L, buffer) || lua_pcall(m_L, 0, 0, 0);
 		if (error)
 		{
-			fprintf(stderr, "%s\n", lua_tostring(m_L, -1));
+			fprintf(stderr, "error:\t%s\n", lua_tostring(m_L, -1));
 			lua_pop(m_L, 1);
 		}
 		fprintf(stdout, ">>");
