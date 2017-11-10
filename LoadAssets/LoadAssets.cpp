@@ -5,30 +5,35 @@
 #include "LuaInterpreter.h"
 #include <memory>
 
-static int addfunction(lua_State * L)
-{
-	int n1 = luaL_checkinteger(L, 1);
-	int n2 = luaL_checkinteger(L, 2);
-	lua_pushinteger(L, n1 + n2);
-	return 1;
-}
-
-
-int main()
+void execute()
 {
 	std::unique_ptr<LuaInterpreter> luaInter = std::make_unique<LuaInterpreter>();
 
 	luaInter->m_L;
 
-	lua_pushcfunction(luaInter->m_L, addfunction);
-
-	lua_setglobal(luaInter->m_L, "add");
+	int error = luaL_loadfile(luaInter->m_L, "Init.lua") || lua_pcall(luaInter->m_L, 0, 0, 0);
+	ASSERT(Not(error))
 
 	luaInter->Run();
 
-	
+
 	fprintf(stdout, "Program terminate.");
 	getchar();
+}
+
+int main()
+{
+
+	try
+	{
+		execute();
+	}
+	catch (SimpleException& e)
+	{
+		fprintf(stderr, e.ToString().c_str());
+		getchar();
+	}
+	
     return 0;
 }
 
