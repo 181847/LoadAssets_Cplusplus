@@ -8,6 +8,8 @@
 #include <DirectXPackedVector.h>
 #include "MyAssert.h"
 
+#define Not(x) (!x)
+
 //分割字符串。
 void SplitString(const std::string& source, std::vector<std::string>& output, const std::string& splitBy);
 
