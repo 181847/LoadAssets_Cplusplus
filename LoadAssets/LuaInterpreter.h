@@ -1,5 +1,7 @@
 #pragma once
 
+#include "lib/MyTools/MyTools.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -11,6 +13,8 @@ extern "C"
 }
 #endif
 
+#define Not(x) (!x)
+
 #pragma comment (lib, "lua.lib")
 
 class LuaInterpreter
@@ -19,9 +23,13 @@ public:
 	LuaInterpreter();
 	~LuaInterpreter();
 
+	DELETE_COPY_CONSTRUCTOR(LuaInterpreter)
+
+	// start running 
+	void Run();
+
 public:
-	// a flag that will stop the interpreter.
-	static bool stop;
+	bool stop = false;
 
 private:
 	lua_State * m_L;

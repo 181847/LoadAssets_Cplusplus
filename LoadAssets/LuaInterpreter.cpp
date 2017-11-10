@@ -1,21 +1,28 @@
 #include "LuaInterpreter.h"
 
-
-bool LuaInterpreter::stop = false;
-
-static int ExitInterpreter(lua_State * L)
-{
-
-}
-
 LuaInterpreter::LuaInterpreter()
 {
 	m_L = luaL_newstate();
 	luaL_openlibs(m_L);
-	stop = false;
 }
 
 
 LuaInterpreter::~LuaInterpreter()
 {
+	lua_close(m_L);
+}
+
+void LuaInterpreter::Run()
+{
+	while (Not(stop) && fgets(buffer, sizeof(buffer), stdin) != NULL)
+	{
+		error = luaL_loadstring(m_L, buffer) || lua_pcall(m_L, 0, 0, 0);
+		if (error)
+		{
+			fprintf(stderr, "%s\n", lua_tostring(m_L, -1));
+			lua_pop(m_L, 1);
+		}
+	}
+	
+	stop = true;
 }
