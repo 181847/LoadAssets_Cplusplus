@@ -30,9 +30,9 @@ public:
 
 public:
 	bool stop = false;
+	lua_State * m_L;
 
 private:
-	lua_State * m_L;
 	// use to store the command line.
 	char buffer[255];
 	int error;
