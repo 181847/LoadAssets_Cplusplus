@@ -9,9 +9,8 @@ void execute()
 {
 	std::unique_ptr<LuaInterpreter> luaInter = std::make_unique<LuaInterpreter>();
 
-	luaInter->m_L;
-
 	int error = luaL_loadfile(luaInter->m_L, "Init.lua") || lua_pcall(luaInter->m_L, 0, 0, 0);
+	
 	ASSERT(Not(error))
 
 	luaInter->Run();
