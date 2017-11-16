@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetsTools.h" />
+    <ClInclude Include="KeyGenerator.h" />
     <ClInclude Include="lib\DirectX12\Common\Camera.h" />
     <ClInclude Include="lib\DirectX12\Common\d3dApp.h" />
     <ClInclude Include="lib\DirectX12\Common\d3dUtil.h" />
@@ -197,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetsTools.cpp" />
+    <ClCompile Include="KeyGenerator.cpp" />
     <ClCompile Include="lib\DirectX12\Common\Camera.cpp" />
     <ClCompile Include="lib\DirectX12\Common\d3dApp.cpp" />
     <ClCompile Include="lib\DirectX12\Common\d3dUtil.cpp" />

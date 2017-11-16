@@ -168,6 +168,9 @@
     <ClInclude Include="AssetsTools.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="KeyGenerator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -204,6 +207,9 @@
       <Filter>lib\DirectX12\Common</Filter>
     </ClCompile>
     <ClCompile Include="AssetsTools.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyGenerator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
