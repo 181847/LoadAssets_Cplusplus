@@ -22,7 +22,7 @@
     <ProjectGuid>{65B0ACDE-04DA-4BEB-93F1-766C6335E0C7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>LoadAssets</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -87,7 +87,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ASSERTIONS_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ASSERTIONS_ENABLED;CHECK_THROW_IF_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -149,6 +149,17 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetsTools.h" />
+    <ClInclude Include="lib\DirectX12\Common\Camera.h" />
+    <ClInclude Include="lib\DirectX12\Common\d3dApp.h" />
+    <ClInclude Include="lib\DirectX12\Common\d3dUtil.h" />
+    <ClInclude Include="lib\DirectX12\Common\d3dx12.h" />
+    <ClInclude Include="lib\DirectX12\Common\DDSTextureLoader.h" />
+    <ClInclude Include="lib\DirectX12\Common\GameTimer.h" />
+    <ClInclude Include="lib\DirectX12\Common\GeometryGenerator.h" />
+    <ClInclude Include="lib\DirectX12\Common\MathHelper.h" />
+    <ClInclude Include="lib\DirectX12\Common\UploadBuffer.h" />
+    <ClInclude Include="lib\DirectX12\FrameResource.h" />
     <ClInclude Include="lib\lua\lapi.h" />
     <ClInclude Include="lib\lua\lauxlib.h" />
     <ClInclude Include="lib\lua\lcode.h" />
@@ -185,6 +196,15 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssetsTools.cpp" />
+    <ClCompile Include="lib\DirectX12\Common\Camera.cpp" />
+    <ClCompile Include="lib\DirectX12\Common\d3dApp.cpp" />
+    <ClCompile Include="lib\DirectX12\Common\d3dUtil.cpp" />
+    <ClCompile Include="lib\DirectX12\Common\DDSTextureLoader.cpp" />
+    <ClCompile Include="lib\DirectX12\Common\GameTimer.cpp" />
+    <ClCompile Include="lib\DirectX12\Common\GeometryGenerator.cpp" />
+    <ClCompile Include="lib\DirectX12\Common\MathHelper.cpp" />
+    <ClCompile Include="lib\DirectX12\FrameResource.cpp" />
     <ClCompile Include="LoadAssets.cpp" />
     <ClCompile Include="LuaInterpreter.cpp" />
     <ClCompile Include="stdafx.cpp" />
