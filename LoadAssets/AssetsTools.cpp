@@ -37,14 +37,20 @@ bool LuaLoadMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::string,
 	printf("material count: %d\n", matCount);
 	lua_pop(L, 1);		// pop the n immediatelly
 
+	ASSERT(
+		fprintf(stderr, "stack Size: %d\n", pLuaInter->GetStackSize())
+		|| true);
+
 	// notice that the index start from 1.
-	for (int i = 1; i < matCount; ++i)
+	for (int i = 1; i <= matCount; ++i)
 	{
-		lua_getfield(L, -1, formater.format(i));
+		lua_geti(L, -1, i);
 
 		// ensure the top is a material,
 		// call the function to get one material.
 		LuaLoadSingleMaterial(pLuaInter, matMap);
+
+		lua_pop(L, 1);
 	}
 
 	return true;
@@ -62,18 +68,18 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::s
 	// get diffuseAlbedo, contain 4 number;
 	double dAlbe = 0;
 	lua_getfield(L, -1, "diffuseAlbedo");
-	int clearStackSize = 2;
+	int clearStackSize = 1;
 
 	for (int i = 1; i <= 4; ++i)
 	{
-		lua_getfield(L, -1, formater.format(i));
-		lua_tonumberx(L, -1, &checker);
+		lua_geti(L, -1, i);
+		dAlbe = lua_tonumberx(L, -1, &checker);
 		ASSERT(checker);
 		printf("diffuseAlbedo[%d]: %lf\n", i, dAlbe);
 		lua_pop(L, 1);		// pop the number immediately
 	}
 
-	// clear the stack, include the material itself.
+	// clear the stack, not include the material itself.
 	lua_pop(L, clearStackSize);
 
 	return true;
