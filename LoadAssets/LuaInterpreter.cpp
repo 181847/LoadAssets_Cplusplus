@@ -28,3 +28,8 @@ void LuaInterpreter::Run()
 	
 	stop = true;
 }
+
+int LuaInterpreter::GetStackSize()
+{
+	return lua_gettop(m_L);
+}

@@ -17,6 +17,8 @@ extern "C"
 
 #pragma comment (lib, "lua.lib")
 
+#define ShowLuaStackSize()
+
 class LuaInterpreter
 {
 public:
@@ -27,6 +29,7 @@ public:
 
 	// start running 
 	void Run();
+	int GetStackSize();
 
 public:
 	bool stop = false;
