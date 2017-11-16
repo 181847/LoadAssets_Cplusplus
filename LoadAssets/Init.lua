@@ -3,6 +3,7 @@ This script is used to config the interpretoer,
 such as adding the search patch.
 --]]
 
+-- AddPath to add a path to the search for loading file
 local function AddPath(path)
     package.path = package.path..";"..path
 end
@@ -31,3 +32,16 @@ loadfile = function(filePath)
         error("no such file:\n\t"..filePath)
     end
 end
+
+
+-- this is the function to check if all the assets linked corrected.
+Assemble = require("Assemble")
+
+-- Call Assemble to load the necessary classes,
+-- such as Texture/RenderItem.....
+Assemble()
+
+-- from the file adding our file
+startLoadAssets = loadfile("startLoadAssets.lua")
+
+startLoadAssets()
