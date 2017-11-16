@@ -18,7 +18,7 @@ public:
 		char lineString[256];
 		std::string returnval;
 
-		sprintf_s(lineString, "\nFile:\t\t%s\nLine:\t\t%d\nExperssion:\t%s", file, line, expr, 256);
+		sprintf_s(lineString, "\nFile:\t\t%s\nLine:\t\t%d\nExperssion:\t%s", file, line, expr);
 
 		returnval += lineString;
 		return returnval;
@@ -28,7 +28,10 @@ public:
 
 
 
-
+// remaind that if the ASSERTIONS_ENABLED is turned off, 
+// the expr in the ASSERT() will no exist.
+// please not put any key operation in the ASSERT(For that you 
+// may consider using ThrowIfFalse(bool).).
 #if ASSERTIONS_ENABLED
 #define ASSERT(expr) \
 	if(expr){}\
@@ -39,6 +42,21 @@ public:
 #else
 #define ASSERT(expr)//不求值
 #endif
+
+// Simulate to the ThrowIfFailed(HRESULT).
+// Here we just use a boolean to togole the exception.
+// If you 
+#if CHECK_THROW_IF_ENABLED
+#define ThrowIfFalse(expr)\
+	if (expr){}\
+	else\
+	{\
+		throw SimpleException(#expr, __FILE__, __LINE__); \
+	}
+#else
+#define ThrowIfFalse(expr) expr
+#endif
+
 
 //这个宏适用于一些代码没有实现的时候，抛出这个异常，防止忘记一些代码的实现
 #define THROW_UNIMPLEMENT_EXCEPTION(pChar)\
