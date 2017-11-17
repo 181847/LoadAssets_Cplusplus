@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lib/MyTools/MyTools.h"
+#include <functional>
 
 #ifdef __cplusplus
 extern "C"
@@ -17,8 +18,6 @@ extern "C"
 
 #pragma comment (lib, "lua.lib")
 
-#define ShowLuaStackSize()
-
 class LuaInterpreter
 {
 public:
@@ -29,7 +28,39 @@ public:
 
 	// start running 
 	void Run();
+
 	int GetStackSize();
+
+	// get the top element as a number,
+	// throw SimpleException if it is not a number,
+	// only if there is no error,
+	// the number will be pop from the stack.
+	lua_Number ToNumberAndClear();
+
+	// get the top element as integer,
+	// throw SimpleException if it is not a number,
+	// only if there is no error,
+	// the integer will be pop from the stack.
+	lua_Integer ToIntegerAndClear();
+
+	// get the top element as string,
+	// throw SimpleException if it is not a String or 
+	// the BufferSize is less than the string length - 1,
+	// copy the string into the buffer,
+	// then pop the string from the stack.
+	template<int BufferSize>
+	void ToStringAndClear(char * buffer);
+
+	// getField on the top element.
+	void GetFieldOnTop(const char * key);
+	// get indexed field of the top 
+	void GetIndexOnTop(const lua_Integer index);
+
+	// pop one element on the top of the stack
+	void Pop();
+
+	// can use lambda to directly control the lua_State;
+	void Do(std::function<void(lua_State * L)> func);
 
 public:
 	bool stop = false;
@@ -41,3 +72,17 @@ private:
 	int error;
 };
 
+template<int BufferSize>
+inline void LuaInterpreter::ToStringAndClear(char * buffer)
+{
+	ASSERT(m_L);
+	int stringLen;
+	char * tempString = lua_tolstring(m_L, -1, &stringLen);
+
+	// if tempString is nullptr, then throw exception
+	ThrowIfFalse(tempString);
+	ThrowIfFalse(BufferSize > stringLen + 1);
+
+	strcpy_s(buffer, BufferSize, tempString);
+	lua_pop(m_L, 1);
+}
