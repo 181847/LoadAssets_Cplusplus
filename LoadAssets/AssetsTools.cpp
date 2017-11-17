@@ -55,31 +55,22 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 
 	// ready to get string
 	const size_t StringMaxLength = 256;
-	size_t StringLen = 0;					// length of string in the lua
-	const char * TempString;				// obtain the string from lua
 
 	// get material name
 	char matName[StringMaxLength];
-	StringLen = 0;
-	lua_getfield(L, -1, "name");
-	TempString = lua_tolstring(L, -1, &StringLen);
-	ThrowIfFalse(StringLen > 0 && StringLen < StringMaxLength);
-	strcpy_s(matName, StringMaxLength, TempString);
-	lua_pop(L, 1);							// pop the name
+	pLuaInter->GetFieldOnTop("name");
+	pLuaInter->ToStringAndClear<StringMaxLength>(matName);
 	printf("Material Name; %s\n", matName);
 
-	ShowStackSize(pLuaInter);
 	// get diffuseAlbedo, contain 4 number;
 	double dAlbe = 0;
-	lua_getfield(L, -1, "diffuseAlbedo");
+	pLuaInter->GetFieldOnTop("diffuseAlbedo");
 	// 4 diffuseAlbedo
 	for (int i = 1; i <= 4; ++i)
 	{
-		lua_geti(L, -1, i);
-		dAlbe = lua_tonumberx(L, -1, &checker);
-		ASSERT(checker);
+		pLuaInter->GetIndexOnTop(i);
+		dAlbe = pLuaInter->ToNumberAndClear();
 		printf("diffuseAlbedo[%d]: %lf\n", i, dAlbe);
-		lua_pop(L, 1);						// pop the number immediately
 		
 		switch (i)
 		{
@@ -99,19 +90,17 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 			ThrowIfFalse(false && "It is impossible.");
 		}
 	}
-	lua_pop(L, 1);							// pop the diffuseAlbedo
+	pLuaInter->Pop();
+	// diffuseAlbedo has been popped
 
-	ShowStackSize(pLuaInter);
 	// 3 FresnelR
 	double fresnelR = 0;
-	lua_getfield(L, -1, "fresnelR");
+	pLuaInter->GetFieldOnTop("fresnelR");
 	for (int i = 1; i <= 3; ++i)
 	{
-		lua_geti(L, -1, i);
-		fresnelR = lua_tonumberx(L, -1, &checker);
-		ASSERT(checker);
+		pLuaInter->GetIndexOnTop(i);
+		fresnelR = pLuaInter->ToNumberAndClear();
 		printf("fresnelR[%d]: %lf\n", i, fresnelR);
-		lua_pop(L, 1);
 
 		switch (i)
 		{
@@ -128,83 +117,64 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 			ThrowIfFalse(false && "It is impossible.");
 		}
 	}
-	lua_pop(L, 1);							// pop fresnelR
+	pLuaInter->Pop();
+	// fresnelR has been popped
 
 	// roughness is just one number
-	double roughness = 0;
-	lua_getfield(L, -1, "roughness");
-	roughness = lua_tonumberx(L, -1, &checker);
+	pLuaInter->GetFieldOnTop("roughness");
+	double roughness = pLuaInter->ToNumberAndClear();
 	printf("roughness: %lf\n", roughness);
-	lua_pop(L, 1);							// pop 
 	material.Roughness = roughness;
 
 	//diffuseMap
 	char diffuseMapName[StringMaxLength];
-	TempString = nullptr;
-	ShowStackSize(pLuaInter);
-	lua_getfield(L, -1, "diffuseMap");
-	ShowStackSize(pLuaInter);
+	pLuaInter->GetFieldOnTop("diffuseMap");
 	// does the material contain any diffuseMap?
-	if (lua_isnil(L, -1)) // no
+	if (pLuaInter->IsNil()) // no
 	{
-		ShowStackSize(pLuaInter);
 		printf("No diffuse map.\n");
 		material.DiffuseSrvHeapIndex = 0;
+		pLuaInter->Pop();
 	}
 	else //yes
 	{
-		ShowStackSize(pLuaInter);
-		TempString = lua_tolstring(L, -1, &StringLen);
-		ASSERT(TempString);
-		ThrowIfFalse(StringLen > 0 && StringLen < StringMaxLength);
-		strcpy_s(diffuseMapName, StringMaxLength, TempString);
-		printf("diffuseMap: %s\n", diffuseMapName);
+		pLuaInter->ToStringAndClear<StringMaxLength>(diffuseMapName);
+		printf("diffuseMapName: %s\n", diffuseMapName);
 
-		// get the map index
-		lua_pop(L, 1);
-		int index = 0;
-		lua_getfield(L, -1, "diffuseMapIndex");
-		index = lua_tointegerx(L, -1, &checker);
-		ASSERT(checker);
-		printf("DiffuseMapIndex: %d\n", index);
-		material.DiffuseSrvHeapIndex = index;
+		pLuaInter->GetFieldOnTop("diffuseMapIndex");
+		int diffuseMapIndex = pLuaInter->ToIntegerAndClear();
+		printf("DiffuseMapIndex: %d\n", diffuseMapIndex);
+		material.DiffuseSrvHeapIndex = diffuseMapIndex;
 	}
-	lua_pop(L, 1);						// pop the diffuseMap(or the nil)
+	// do not need to pop any thing, material is on the top
 
-	//normalMap
-	char normalMapName[256];
-	TempString = nullptr;
-	StringLen = 0;
-	lua_getfield(L, -1, "normalMap");
+	//diffuseMap
+	char normalMapName[StringMaxLength];
+	pLuaInter->GetFieldOnTop("normalMap");
 	// does the material contain any normalMap?
-	if (lua_isnil(L, -1)) // no
+	if (pLuaInter->IsNil()) // no
 	{
 		printf("No normal map.\n");
 		material.NormalSrvHeapIndex = 0;
+		pLuaInter->Pop();
 	}
 	else //yes
 	{
-		TempString = lua_tolstring(L, -1, &StringLen);
-		ASSERT(TempString);
-		ThrowIfFalse(StringLen > 0 && StringLen < StringMaxLength);
-		strcpy_s(normalMapName, StringMaxLength, TempString);
-		printf("normalMap: %s\n", normalMapName);
+		pLuaInter->ToStringAndClear<StringMaxLength>(normalMapName);
+		printf("normalMapName: %s\n", normalMapName);
 
-
-		// get the map index
-		lua_pop(L, 1);
-		int index = 0;
-		lua_getfield(L, -1, "normalMapIndex");
-		index = lua_tointegerx(L, -1, &checker);
-		ASSERT(checker);
-		printf("normalMapIndex: %d\n", index);
-
-		material.NormalSrvHeapIndex = index;
+		pLuaInter->GetFieldOnTop("normalMapIndex");
+		int normalMapIndex = pLuaInter->ToIntegerAndClear();
+		printf("NormalMapIndex: %d\n", normalMapIndex);
+		material.NormalSrvHeapIndex = normalMapIndex;
 	}
-	lua_pop(L, 1);					// pop the normalMap(or the nil)
+	// do not need to pop any thing, material is on the top
 
+
+	// finally , pop the material
+	//pLuaInter->Pop();
 	// insert into the map
-	(*matMap)[std::string(matName)] = material;
+	matArr->push_back(material);
 	return true;
 }
 
@@ -215,11 +185,11 @@ void ShowDetail(Material & m)
 		m.DiffuseAlbedo.y,
 		m.DiffuseAlbedo.z,
 		m.DiffuseAlbedo.w);
-	printf("Fresnelr: %lf, %lf, %lf",
+	printf("Fresnelr: %lf, %lf, %lf\n",
 		m.FresnelR0.x,
 		m.FresnelR0.y,
 		m.FresnelR0.z);
-	printf("diffuseMapIndex: %d", m.DiffuseSrvHeapIndex);
-	printf("normalMapIndex: %d", m.NormalSrvHeapIndex);
+	printf("diffuseMapIndex: %d\n", m.DiffuseSrvHeapIndex);
+	printf("normalMapIndex: %d\n", m.NormalSrvHeapIndex);
 	
 }
