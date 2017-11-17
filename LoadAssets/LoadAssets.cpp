@@ -6,6 +6,8 @@
 #include "lib/DirectX12/FrameResource.h"
 #include "AssetsTools.h"
 
+extern const int gNumFrameResources = 3;
+
 void execute()
 {
 	std::unique_ptr<LuaInterpreter> luaInter = std::make_unique<LuaInterpreter>();
@@ -16,8 +18,22 @@ void execute()
 	ASSERT(Not(error));
 
 	// The map to store the material data.
-	std::unordered_map<std::string, Material> globalMaterial;
+	std::vector<Material> globalMaterial;
+	// push one empty material into the vector.
+	// so the indices in the vectore is same 
+	// as in the lua.
+	Material placeHolder;
+	globalMaterial.push_back(placeHolder);
 	
+
+	// call the Assemble function once
+	lua_getglobal(luaInter->m_L, "Assemble");
+	//return 0 stand for no error
+	ThrowIfFalse(0 == lua_pcall(luaInter->m_L, 0, 2, 0));
+	//return false stand for no error
+	ThrowIfFalse(false == lua_toboolean(luaInter->m_L, -2));
+
+
 	// Load all the material int the map,
 	// the name will be the key.
 	LuaLoadMaterial(luaInter.get(), &globalMaterial);
