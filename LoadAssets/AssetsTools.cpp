@@ -6,67 +6,49 @@
 #define ShowStackSize(luaInterpreter)
 #endif
 
-bool LuaLoadMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::string, Material> * matMap)
+bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
+	std::vector<Material> * matArr)
 {
 	ASSERT(pLuaInter);
-	ASSERT(matMap);
+	ASSERT(matArr);
 
 	KeyGenerator<32> formater;
-	auto * L = pLuaInter->m_L;
 
-	// the MatPart is the MaterialSet which contain information 
-	// about all the material.
-	lua_getglobal(L, "Assemble");
+	pLuaInter->GetFieldOnTop("MaterialQueue");
+	pLuaInter->GetFieldOnTop("n");
 
-	//return 0 stand for no error
-	ThrowIfFalse(0 == lua_pcall(L, 0, 2, 0));
-
-
-	//return false stand for no error
-	ThrowIfFalse(false == lua_toboolean(L, -2));
-
-	
-	ASSERT(
-		fprintf(stderr, "stack Size: %d\n", pLuaInter->GetStackSize())
-		|| true);
-	lua_getfield(L, -1, "MaterialQueue"); 
-	ASSERT(
-		fprintf(stderr, "stack Size: %d\n", pLuaInter->GetStackSize())
-		|| true);
-
-	// get the material count
-	lua_getfield(L, -1, "n");
-	int matCount;
-	int isInt;
-	matCount = lua_tointegerx(L, -1, &isInt);
-	ASSERT(isInt);
+	int matCount = pLuaInter->ToIntegerAndClear();
 	printf("material count: %d\n", matCount);
-	lua_pop(L, 1);		// pop the n immediatelly
-
-	ASSERT(
-		fprintf(stderr, "stack Size: %d\n", pLuaInter->GetStackSize())
-		|| true);
+	// n has been popped
 
 	// notice that the index start from 1.
 	for (int i = 1; i <= matCount; ++i)
 	{
-		lua_geti(L, -1, i);
+		
+		pLuaInter->GetIndexOnTop(i);
 
 		// ensure the top is a material,
 		// call the function to get one material.
-		LuaLoadSingleMaterial(pLuaInter, matMap);
+		LuaLoadSingleMaterial(pLuaInter, matArr);
 
-		lua_pop(L, 1);
+		pLuaInter->Pop();
+	}
+
+	for (auto & m : *matArr)
+	{
+		ShowDetail(m);
+		putchar('\n');
 	}
 
 	return true;
 }
 
-bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::string, Material>* matMap)
+bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
+	std::vector<Material> * matArr)
 {
+	Material material;
 	ASSERT(pLuaInter);
-	ASSERT(matMap);
-	int checker;							// to check if the element is expected type.
+	ASSERT(matArr);
 	KeyGenerator<32> formater;				// to generatoer the key string
 
 	lua_State * L = pLuaInter->m_L;			// get for convience
@@ -98,6 +80,24 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::s
 		ASSERT(checker);
 		printf("diffuseAlbedo[%d]: %lf\n", i, dAlbe);
 		lua_pop(L, 1);						// pop the number immediately
+		
+		switch (i)
+		{
+		case 1:
+			material.DiffuseAlbedo.x = dAlbe;
+			break;
+		case 2:
+			material.DiffuseAlbedo.y = dAlbe;
+			break;
+		case 3:
+			material.DiffuseAlbedo.z = dAlbe;
+			break;
+		case 4:
+			material.DiffuseAlbedo.w = dAlbe;
+			break;
+		default:
+			ThrowIfFalse(false && "It is impossible.");
+		}
 	}
 	lua_pop(L, 1);							// pop the diffuseAlbedo
 
@@ -112,6 +112,21 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::s
 		ASSERT(checker);
 		printf("fresnelR[%d]: %lf\n", i, fresnelR);
 		lua_pop(L, 1);
+
+		switch (i)
+		{
+		case 1:
+			material.FresnelR0.x = dAlbe;
+			break;
+		case 2:
+			material.FresnelR0.y = dAlbe;
+			break;
+		case 3:
+			material.FresnelR0.z = dAlbe;
+			break;
+		default:
+			ThrowIfFalse(false && "It is impossible.");
+		}
 	}
 	lua_pop(L, 1);							// pop fresnelR
 
@@ -120,8 +135,8 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::s
 	lua_getfield(L, -1, "roughness");
 	roughness = lua_tonumberx(L, -1, &checker);
 	printf("roughness: %lf\n", roughness);
-	lua_pop(L, 1);							// pop roughness
-
+	lua_pop(L, 1);							// pop 
+	material.Roughness = roughness;
 
 	//diffuseMap
 	char diffuseMapName[StringMaxLength];
@@ -134,6 +149,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::s
 	{
 		ShowStackSize(pLuaInter);
 		printf("No diffuse map.\n");
+		material.DiffuseSrvHeapIndex = 0;
 	}
 	else //yes
 	{
@@ -143,6 +159,15 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::s
 		ThrowIfFalse(StringLen > 0 && StringLen < StringMaxLength);
 		strcpy_s(diffuseMapName, StringMaxLength, TempString);
 		printf("diffuseMap: %s\n", diffuseMapName);
+
+		// get the map index
+		lua_pop(L, 1);
+		int index = 0;
+		lua_getfield(L, -1, "diffuseMapIndex");
+		index = lua_tointegerx(L, -1, &checker);
+		ASSERT(checker);
+		printf("DiffuseMapIndex: %d\n", index);
+		material.DiffuseSrvHeapIndex = index;
 	}
 	lua_pop(L, 1);						// pop the diffuseMap(or the nil)
 
@@ -155,6 +180,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::s
 	if (lua_isnil(L, -1)) // no
 	{
 		printf("No normal map.\n");
+		material.NormalSrvHeapIndex = 0;
 	}
 	else //yes
 	{
@@ -163,7 +189,37 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter, std::unordered_map<std::s
 		ThrowIfFalse(StringLen > 0 && StringLen < StringMaxLength);
 		strcpy_s(normalMapName, StringMaxLength, TempString);
 		printf("normalMap: %s\n", normalMapName);
+
+
+		// get the map index
+		lua_pop(L, 1);
+		int index = 0;
+		lua_getfield(L, -1, "normalMapIndex");
+		index = lua_tointegerx(L, -1, &checker);
+		ASSERT(checker);
+		printf("normalMapIndex: %d\n", index);
+
+		material.NormalSrvHeapIndex = index;
 	}
 	lua_pop(L, 1);					// pop the normalMap(or the nil)
+
+	// insert into the map
+	(*matMap)[std::string(matName)] = material;
 	return true;
+}
+
+void ShowDetail(Material & m)
+{
+	printf("diffAbledo: %lf, %lf, %lf, %lf\n",
+		m.DiffuseAlbedo.x,
+		m.DiffuseAlbedo.y,
+		m.DiffuseAlbedo.z,
+		m.DiffuseAlbedo.w);
+	printf("Fresnelr: %lf, %lf, %lf",
+		m.FresnelR0.x,
+		m.FresnelR0.y,
+		m.FresnelR0.z);
+	printf("diffuseMapIndex: %d", m.DiffuseSrvHeapIndex);
+	printf("normalMapIndex: %d", m.NormalSrvHeapIndex);
+	
 }
