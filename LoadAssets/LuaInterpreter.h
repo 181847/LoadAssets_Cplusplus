@@ -62,6 +62,8 @@ public:
 	// can use lambda to directly control the lua_State;
 	void Do(std::function<void(lua_State * L)> func);
 
+	bool IsNil();
+
 public:
 	bool stop = false;
 	lua_State * m_L;
@@ -76,8 +78,8 @@ template<int BufferSize>
 inline void LuaInterpreter::ToStringAndClear(char * buffer)
 {
 	ASSERT(m_L);
-	int stringLen;
-	char * tempString = lua_tolstring(m_L, -1, &stringLen);
+	size_t stringLen;
+	const char * tempString = lua_tolstring(m_L, -1, &stringLen);
 
 	// if tempString is nullptr, then throw exception
 	ThrowIfFalse(tempString);
