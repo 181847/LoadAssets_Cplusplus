@@ -12,6 +12,15 @@ test_t_2 = Texture.new("tree", "d:/texture/tree.dds")
 
 test_m_1 = Material.new("baseMat")
 test_m_2 = Material.new("whiteMat")
+test_m_3 = Material.new("bricks")
+test_m_3.diffuseAlbedo[1] = 0.3
+test_m_3.diffuseAlbedo[2] = 0
+test_m_3.diffuseMap = test_t_1.name
+
+test_m_4 = Material.new("tree")
+test_m_4.diffuseAlbedo[3] = 0.222223333
+test_m_4.normalMap = test_t_1.name
+test_m_4.diffuseMap = test_t_2.name
 
 test_g_1 = Geometry.new("box", "../base/box.obj")
 test_g_2 = Geometry.new("sphere", "../base/geoSphere.obj")
@@ -24,6 +33,8 @@ test_t_2:addToGlobalSet()
 --
 test_m_1:addToGlobalSet()
 test_m_2:addToGlobalSet()
+test_m_3:addToGlobalSet()
+test_m_4:addToGlobalSet()
 --
 test_g_1:addToGlobalSet()
 test_g_2:addToGlobalSet()
