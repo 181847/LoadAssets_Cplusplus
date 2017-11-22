@@ -193,3 +193,23 @@ void ShowDetail(Material & m)
 	printf("normalMapIndex: %d\n", m.NormalSrvHeapIndex);
 	
 }
+
+bool 
+LuaLoadGeometrys(
+	LuaInterpreter * pLuaInter, 
+	std::vector<std::unique_ptr<MeshGeometry>>* geoArr, 
+	Microsoft::WRL::ComPtr<ID3D12Device> mDevice, 
+	Microsoft::WRL::ComPtr<ID3D12CommandList> mCmdList)
+{
+	// first define a lambda function to convert Lua::MeshData
+	// to the MeshGeometry
+	std::function<std::unique_ptr<MeshGeometry>(std::string& name, Lua::MeshData *)>
+		converter = [mDevice, mCmdList]
+		(std::string& name, Lua::MeshData* pMd) 
+		{
+			
+			return std::make_unique<MeshGeometry>();
+		};
+
+	return true;
+}
