@@ -12,7 +12,7 @@ bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
 	ASSERT(pLuaInter);
 	ASSERT(matArr);
 
-	KeyGenerator<32> formater;
+	Formater<32> formater;
 
 	pLuaInter->GetFieldOnTop("MaterialQueue");
 	pLuaInter->GetFieldOnTop("n");
@@ -49,7 +49,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	Material material;
 	ASSERT(pLuaInter);
 	ASSERT(matArr);
-	KeyGenerator<32> formater;				// to generatoer the key string
+	Formater<32> formater;				// to generatoer the key string
 
 	lua_State * L = pLuaInter->m_L;			// get for convience
 

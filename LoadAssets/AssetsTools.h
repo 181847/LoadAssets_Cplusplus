@@ -1,6 +1,6 @@
 #pragma once
 #include "LuaInterpreter.h"
-#include "KeyGenerator.h"
+#include "Formater.h"
 #include "lib\DirectX12\FrameResource.h"
 #include <functional>
 // This is a header which define many tool function to load assets,
@@ -24,3 +24,8 @@ bool LuaLoadSingleMaterial(LuaInterpreter* pLuaInter,
 	std::vector<Material> * matArr);
 
 void ShowDetail(Material & m);
+
+// ensure that the assembleSet is on the top of the stack.
+bool LuaLoadGeometrys(LuaInterpreter* pLuaInter,
+	std::vector<MeshGeometry> geoArr, 
+	std::function<std::unique_ptr<MeshGeometry>()>);
