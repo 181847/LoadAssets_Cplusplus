@@ -28,6 +28,9 @@
     <Filter Include="lib\DirectX12\Common">
       <UniqueIdentifier>{e138de33-293d-424a-ae16-12e3c6f09127}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib\luaModule">
+      <UniqueIdentifier>{b9bdac47-379b-4c4d-9f2c-fdc2cc9f0a11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -168,8 +171,20 @@
     <ClInclude Include="AssetsTools.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="KeyGenerator.h">
+    <ClInclude Include="Formater.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\luaModuls\LuaMeshData.h">
+      <Filter>lib\luaModule</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\MyTools\Cleaner.h">
+      <Filter>lib\MyTools</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\MyTools\DLLTools.h">
+      <Filter>lib\MyTools</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\MyTools\LuaTools.h">
+      <Filter>lib\MyTools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -209,8 +224,11 @@
     <ClCompile Include="AssetsTools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="KeyGenerator.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="lib\luaModuls\LuaMeshData.cpp">
+      <Filter>lib\luaModule</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\MyTools\Cleaner.cpp">
+      <Filter>lib\MyTools</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

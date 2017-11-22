@@ -150,7 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetsTools.h" />
-    <ClInclude Include="KeyGenerator.h" />
+    <ClInclude Include="Formater.h" />
     <ClInclude Include="lib\DirectX12\Common\Camera.h" />
     <ClInclude Include="lib\DirectX12\Common\d3dApp.h" />
     <ClInclude Include="lib\DirectX12\Common\d3dUtil.h" />
@@ -161,6 +161,7 @@
     <ClInclude Include="lib\DirectX12\Common\MathHelper.h" />
     <ClInclude Include="lib\DirectX12\Common\UploadBuffer.h" />
     <ClInclude Include="lib\DirectX12\FrameResource.h" />
+    <ClInclude Include="lib\luaModuls\LuaMeshData.h" />
     <ClInclude Include="lib\lua\lapi.h" />
     <ClInclude Include="lib\lua\lauxlib.h" />
     <ClInclude Include="lib\lua\lcode.h" />
@@ -187,8 +188,11 @@
     <ClInclude Include="lib\lua\lundump.h" />
     <ClInclude Include="lib\lua\lvm.h" />
     <ClInclude Include="lib\lua\lzio.h" />
+    <ClInclude Include="lib\MyTools\Cleaner.h" />
     <ClInclude Include="lib\MyTools\DeLinkedList.h" />
+    <ClInclude Include="lib\MyTools\DLLTools.h" />
     <ClInclude Include="lib\MyTools\LinkedAllocator.h" />
+    <ClInclude Include="lib\MyTools\LuaTools.h" />
     <ClInclude Include="lib\MyTools\MyAssert.h" />
     <ClInclude Include="lib\MyTools\MyStaticAllocator.h" />
     <ClInclude Include="lib\MyTools\MyTools.h" />
@@ -198,7 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetsTools.cpp" />
-    <ClCompile Include="KeyGenerator.cpp" />
     <ClCompile Include="lib\DirectX12\Common\Camera.cpp" />
     <ClCompile Include="lib\DirectX12\Common\d3dApp.cpp" />
     <ClCompile Include="lib\DirectX12\Common\d3dUtil.cpp" />
@@ -207,6 +210,8 @@
     <ClCompile Include="lib\DirectX12\Common\GeometryGenerator.cpp" />
     <ClCompile Include="lib\DirectX12\Common\MathHelper.cpp" />
     <ClCompile Include="lib\DirectX12\FrameResource.cpp" />
+    <ClCompile Include="lib\luaModuls\LuaMeshData.cpp" />
+    <ClCompile Include="lib\MyTools\Cleaner.cpp" />
     <ClCompile Include="LoadAssets.cpp" />
     <ClCompile Include="LuaInterpreter.cpp" />
     <ClCompile Include="stdafx.cpp" />
