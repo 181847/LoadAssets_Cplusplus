@@ -1,6 +1,7 @@
 #pragma once
 #include "LuaInterpreter.h"
-#include "Formater.h"
+#include "lib\MyTools\Formater.h"
+#include "lib\luaModuls\LuaMeshData.h"
 #include "lib\DirectX12\FrameResource.h"
 #include <functional>
 // This is a header which define many tool function to load assets,
@@ -9,8 +10,7 @@
 
 // ensure that the assembleSet is sitted at top of the stack.
 // Load Material Data from the luaInterpreter, 
-// the additional Material will be append into the matMap,
-// if there no confliction of name(or the old Material will be replace).
+// the additional Material will be append into the matMap.
 bool LuaLoadMaterial(LuaInterpreter* pLuaInter,
 	std::vector<Material> * matArr);
 
@@ -23,9 +23,11 @@ bool LuaLoadMaterial(LuaInterpreter* pLuaInter,
 bool LuaLoadSingleMaterial(LuaInterpreter* pLuaInter,
 	std::vector<Material> * matArr);
 
+// A debug function to show the Material data.
 void ShowDetail(Material & m);
 
 // ensure that the assembleSet is on the top of the stack.
 bool LuaLoadGeometrys(LuaInterpreter* pLuaInter,
-	std::vector<MeshGeometry> geoArr, 
-	std::function<std::unique_ptr<MeshGeometry>()>);
+	std::vector<std::unique_ptr<MeshGeometry>> *geoArr,	// store all the geometry
+	Microsoft::WRL::ComPtr<ID3D12Device> mDevice,
+	Microsoft::WRL::ComPtr<ID3D12CommandList> mCmdList);
