@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <exception>
 class  SimpleException: std::exception
 {
@@ -27,7 +28,6 @@ public:
 
 
 
-
 // remaind that if the ASSERTIONS_ENABLED is turned off, 
 // the expr in the ASSERT() will no exist.
 // please not put any key operation in the ASSERT(For that you 
@@ -44,8 +44,7 @@ public:
 #endif
 
 // Simulate to the ThrowIfFailed(HRESULT).
-// Here we just use a boolean to togole the exception.
-// If you 
+// Here we just use a boolean to toggle the exception.
 #if CHECK_THROW_IF_ENABLED
 #define ThrowIfFalse(expr)\
 	if (expr){}\
@@ -55,6 +54,20 @@ public:
 	}
 #else
 #define ThrowIfFalse(expr) expr
+#endif
+
+#ifdef _DEBUG
+#define SHOW_DEBUG_MESSAGE
+#endif
+
+
+#undef SHOW_DEBUG_MESSAGE
+
+// print some message only in the debug mode.
+#ifdef SHOW_DEBUG_MESSAGE
+#define DEBUG_MESSAGE(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
+#else
+#define DEBUG_MESSAGE(...)
 #endif
 
 
