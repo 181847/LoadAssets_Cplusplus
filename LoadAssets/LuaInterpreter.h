@@ -64,6 +64,15 @@ public:
 
 	bool IsNil();
 
+
+	// use a outer function to convert the userData(void*)
+	// to the specific pointer type.
+	template<typename USERDATA_TYPE>
+	USERDATA_TYPE *
+	ToUserDataAndClear(
+		const char * metaTable, 
+		std::function<USERDATA_TYPE*(void*)> converter);
+
 public:
 	bool stop = false;
 	lua_State * m_L;
@@ -87,4 +96,17 @@ inline void LuaInterpreter::ToStringAndClear(char * buffer)
 
 	strcpy_s(buffer, BufferSize, tempString);
 	lua_pop(m_L, 1);
+}
+
+template<typename USERDATA_TYPE>
+inline USERDATA_TYPE *
+LuaInterpreter::ToUserDataAndClear(
+	const char * metaTableName, 
+	std::function<USERDATA_TYPE*(void*)> converter)
+{
+	void * pointer = lua_touserdata(m_L, -1);
+	ThrowIfFalse(pointer);
+	Pop();
+	// pop the userData
+	return converter(pointer);
 }
