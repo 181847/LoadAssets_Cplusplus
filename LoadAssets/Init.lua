@@ -35,12 +35,8 @@ end
 
 
 -- this is the function to check if all the assets linked corrected.
-Assemble = require("Assemble")
-
--- Call Assemble to load the necessary classes,
--- such as Texture/RenderItem.....
-Assemble()
-
+AssembleModule = require("Assemble")
+AssembleFunction = AssembleModule.Assemble
 -- from the file adding our file
 startLoadAssets = loadfile("startLoadAssets.lua")
 
