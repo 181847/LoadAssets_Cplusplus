@@ -12,7 +12,7 @@ public:
 	const char * format(const char * string);
 	const char * format(int i);
 
-	const char * lastResult();
+	char * bufferPointer();
 
 private:
 	char  buffer[BufferSize];
@@ -45,7 +45,7 @@ const char * Formater<BufferSize>::format(int i)
 }
 
 template<int BufferSize>
-const char * Formater<BufferSize>::lastResult()
+char * Formater<BufferSize>::bufferPointer()
 {
 	return buffer;
 }
