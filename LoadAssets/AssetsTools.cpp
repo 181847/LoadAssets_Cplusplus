@@ -12,9 +12,8 @@ bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
 	ASSERT(pLuaInter);
 	ASSERT(matArr);
 
-	Formater<32> formater;
+	Formater<MaxNameLength> formater;
 
-	pLuaInter->GetFieldOnTop("MaterialQueue");
 	pLuaInter->GetFieldOnTop("n");
 
 	int matCount = pLuaInter->ToIntegerAndClear();
@@ -199,17 +198,134 @@ LuaLoadGeometrys(
 	LuaInterpreter * pLuaInter, 
 	std::vector<std::unique_ptr<MeshGeometry>>* geoArr, 
 	Microsoft::WRL::ComPtr<ID3D12Device> mDevice, 
-	Microsoft::WRL::ComPtr<ID3D12CommandList> mCmdList)
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCmdList)
 {
 	// first define a lambda function to convert Lua::MeshData
 	// to the MeshGeometry
-	std::function<std::unique_ptr<MeshGeometry>(std::string& name, Lua::MeshData *)>
-		converter = [mDevice, mCmdList]
-		(std::string& name, Lua::MeshData* pMd) 
-		{
-			
-			return std::make_unique<MeshGeometry>();
-		};
+	std::function<
+		std::unique_ptr<MeshGeometry>
+		(std::string& name, Lua::MeshData *)>
+	converter = 
 
-	return true;
+		// lambda
+	[mDevice, mCmdList]
+	(std::string& name, Lua::MeshData* pMd) 
+		-> std::unique_ptr<MeshGeometry>
+	{
+		auto &Vertices	= pMd->Vertices;
+		auto &Indices	= pMd->GetIndices16();
+		const UINT VertexCount		= Vertices.size();
+		const UINT IndexCount		= Indices.size();
+
+		// using the MeshData to fill the indices
+		std::vector<uint16_t> totalIndices;
+
+		totalIndices.insert(totalIndices.end(),
+			std::begin(pMd->GetIndices16()), std::end(pMd->GetIndices16()));
+
+		// by default, we will use the Lua::Vertex as the
+		// vertex struct, which contain the:
+		// position(3)/normal(3)/textureCoord(2)/tangentU(3)
+		const UINT vbByteSize = VertexCount * sizeof(Lua::Vertex);
+		const UINT ibByteSize = IndexCount * sizeof(std::uint16_t);
+
+		auto geo = std::make_unique<MeshGeometry>();
+		geo->Name					= name;
+		geo->VertexBufferByteSize	= vbByteSize;
+		geo->IndexBufferByteSize	= ibByteSize;
+		geo->VertexByteStride		= (UINT)sizeof(Vertex);
+		geo->IndexFormat			= DXGI_FORMAT_R16_UINT;
+
+		ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+		ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+
+		CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), Vertices.data(), vbByteSize);
+		CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), Indices.data(), ibByteSize);
+
+		//geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(mDevice.Get(), mCmdList.Get(),
+		//	Vertices.data(), vbByteSize, geo->VertexBufferUploader);
+		//geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(mDevice.Get(), mCmdList.Get(),
+		//	Indices.data(), ibByteSize, geo->IndexBufferUploader);
+
+		return std::move(geo);
+	};
+
+	return LuaLoadGeometrys(pLuaInter, geoArr, converter);
+}
+
+template<typename GEOMETRY>
+bool 
+LuaLoadGeometrys(
+	LuaInterpreter * pLuaInter, 
+	std::vector<std::unique_ptr<GEOMETRY>>* geoArr, 
+	std::function<std::unique_ptr<GEOMETRY>(std::string&name, Lua::MeshData*)> converter)
+{
+	ASSERT(pLuaInter);
+	ASSERT(geoArr);
+
+	// this is a funciton to get the subMesh name from the LuaInterpreter.
+	// Before call the function, ensure that the subMeshes is on the top of the stack,
+	// stack top -> subMeshes
+	//						box:
+	//							startIndex	= 1
+	//							endIndex	= 32
+	//						sphere:
+	//							startIndex	= 33
+	//							endIndex	= 75
+	std::function<std::unique_ptr<GEOMETRY>(std::unique_ptr<GEOMETRY> geo> 
+		DecorateWithSubMeshName =
+	[&pLuaInter]
+	(std::unique_ptr<GEOMETRY> geo) 
+	{
+
+		return std::move(geo);
+	};
+
+	// this is the function to go into the pLuaInterpreter get the userData,
+	// then convert it to the expected pointer,
+	// here we converte the userdata(void*) to the Lua::MeshData*
+	std::function<Lua::MeshData*(void *)> 
+		userData_to_meshData = 
+		[](void * pointer)
+	{
+		auto pMeshData = reinterpret_cast<LuaPointerContainer<Lua::MeshData> *>(pointer);
+		return pMeshData->pointer;
+	};
+
+	// help get the name
+	Formater<MaxNameLength> name;
+
+	int geoCount = 0;
+	// open GeometryQueue
+	pLuaInter->GetFieldOnTop("GeometryQueue");
+	// Geometry count
+	pLuaInter->GetFieldOnTop("n");
+	geoCount = pLuaInter->ToNumberAndClear();
+	
+	for (int i = 1; i <= geoCount; ++i)
+	{
+		// one Geometry instance
+		pLuaInter->GetIndexOnTop(i);
+
+		// get geometry name 
+		pLuaInter->GetFieldOnTop("name");
+		pLuaInter->ToStringAndClear<MaxNameLength>(name.bufferPointer());
+		std::string geoName = name.bufferPointer();
+
+		// get meshData
+		pLuaInter->GetFieldOnTop("meshData");
+		auto * pMeshData = pLuaInter->ToUserDataAndClear("Lua.MeshData", userData_to_meshData);
+
+		auto geo = converter(geoName, pMeshData);
+		
+		geoArr->push_back(std::move(geo));
+		
+		// pop Geometry instance
+		pLuaInter->Pop();
+	}
+
+
+	// pop GeometryQueue
+	pLuaInter->Pop();
+	return false;
 }
