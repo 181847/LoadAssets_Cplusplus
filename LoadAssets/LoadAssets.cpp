@@ -15,7 +15,7 @@ void execute()
 	
 
 	ASSERT(Not(error));
-	luaInter->Run();
+	//luaInter->Run();
 
 	// The map to store the material data.
 	std::vector<Material> globalMaterial;
@@ -28,7 +28,7 @@ void execute()
 	
 
 	// call the Assemble function once
-	lua_getglobal(luaInter->m_L, "AssembleFunction");
+	lua_getglobal(luaInter->m_L, "Assemble");
 	//return 0 stand for no error
 	ThrowIfFalse(0 == lua_pcall(luaInter->m_L, 0, 2, 0));
 	//return false stand for no error
@@ -40,8 +40,13 @@ void execute()
 
 	luaInter->GetFieldOnTop("MaterialQueue");
 	LuaLoadMaterial(luaInter.get(), &globalMaterial);
+	luaInter->Pop();
+	// pop the MaterialQueue
+
 	luaInter->GetFieldOnTop("GeometryQueue");
-	//LuaLoadGeometrys(luaInter.get(), &globalGeometrys, nullptr, nullptr);
+	LuaLoadGeometrys(luaInter.get(), &globalGeometrys, nullptr, nullptr);
+	luaInter->Pop();
+	// pop the GeometryQueue
 
 	luaInter->Run();
 
