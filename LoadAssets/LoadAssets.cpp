@@ -11,11 +11,7 @@ void execute()
 	std::unique_ptr<LuaInterpreter> luaInter = std::make_unique<LuaInterpreter>();
 
 	// call init lua to start assets loading.
-	int error = luaL_loadfile(luaInter->m_L, "Init.lua") || lua_pcall(luaInter->m_L, 0, 0, 0);
-	
-
-	ASSERT(Not(error));
-	//luaInter->Run();
+	luaInter->DoFile("Init.lua");
 
 	// The map to store the material data.
 	std::vector<Material> globalMaterial;
@@ -47,6 +43,20 @@ void execute()
 	LuaLoadGeometrys(luaInter.get(), &globalGeometrys, nullptr, nullptr);
 	luaInter->Pop();
 	// pop the GeometryQueue
+
+
+
+	for (auto & m : globalMaterial)
+	{
+		ShowDetail(m);
+		putchar('\n');
+	}
+
+	DEBUG_MESSAGE("geoname\t\tindexbytesize\t\tvertexbytesize\t\t\n");
+	for (auto & g : globalGeometrys)
+	{
+		DEBUG_MESSAGE("%s\t\t%d\t\t%d\t\t\t\n", g->Name.c_str(), g->IndexBufferByteSize, g->VertexBufferByteSize);
+	}
 
 	luaInter->Run();
 
