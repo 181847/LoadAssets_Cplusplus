@@ -16,20 +16,21 @@ bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
 
 	pLuaInter->GetFieldOnTop("n");
 
-	int matCount = pLuaInter->ToIntegerAndClear();
+	int matCount = pLuaInter->ToIntegerAndPop<int>();
 	printf("material count: %d\n", matCount);
 	// n has been popped
 
 	// notice that the index start from 1.
 	for (int i = 1; i <= matCount; ++i)
 	{
-		
+		// get material
 		pLuaInter->GetIndexOnTop(i);
 
 		// ensure the top is a material,
 		// call the function to get one material.
 		LuaLoadSingleMaterial(pLuaInter, matArr);
 
+		// pop the material
 		pLuaInter->Pop();
 	}
 
@@ -62,13 +63,13 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	printf("Material Name; %s\n", matName);
 
 	// get diffuseAlbedo, contain 4 number;
-	double dAlbe = 0;
+	float dAlbe = 0;
 	pLuaInter->GetFieldOnTop("diffuseAlbedo");
 	// 4 diffuseAlbedo
 	for (int i = 1; i <= 4; ++i)
 	{
 		pLuaInter->GetIndexOnTop(i);
-		dAlbe = pLuaInter->ToNumberAndClear();
+		dAlbe = pLuaInter->ToNumberAndPop<float>();
 		printf("diffuseAlbedo[%d]: %lf\n", i, dAlbe);
 		
 		switch (i)
@@ -93,13 +94,14 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	// diffuseAlbedo has been popped
 
 	// 3 FresnelR
-	double fresnelR = 0;
+	float fresnelR = 0;
 	pLuaInter->GetFieldOnTop("fresnelR");
 	for (int i = 1; i <= 3; ++i)
 	{
 		pLuaInter->GetIndexOnTop(i);
-		fresnelR = pLuaInter->ToNumberAndClear();
+		fresnelR = pLuaInter->ToNumberAndPop<float>();
 		printf("fresnelR[%d]: %lf\n", i, fresnelR);
+
 
 		switch (i)
 		{
@@ -121,7 +123,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 
 	// roughness is just one number
 	pLuaInter->GetFieldOnTop("roughness");
-	double roughness = pLuaInter->ToNumberAndClear();
+	float roughness = pLuaInter->ToNumberAndPop<float>();
 	printf("roughness: %lf\n", roughness);
 	material.Roughness = roughness;
 
@@ -134,6 +136,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 		printf("No diffuse map.\n");
 		material.DiffuseSrvHeapIndex = 0;
 		pLuaInter->Pop();
+
 	}
 	else //yes
 	{
@@ -141,7 +144,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 		printf("diffuseMapName: %s\n", diffuseMapName);
 
 		pLuaInter->GetFieldOnTop("diffuseMapIndex");
-		int diffuseMapIndex = pLuaInter->ToIntegerAndClear();
+		int diffuseMapIndex = pLuaInter->ToIntegerAndPop<int>();
 		printf("DiffuseMapIndex: %d\n", diffuseMapIndex);
 		material.DiffuseSrvHeapIndex = diffuseMapIndex;
 	}
@@ -163,7 +166,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 		printf("normalMapName: %s\n", normalMapName);
 
 		pLuaInter->GetFieldOnTop("normalMapIndex");
-		int normalMapIndex = pLuaInter->ToIntegerAndClear();
+		int normalMapIndex = pLuaInter->ToIntegerAndPop<int>();
 		printf("NormalMapIndex: %d\n", normalMapIndex);
 		material.NormalSrvHeapIndex = normalMapIndex;
 	}
@@ -246,11 +249,11 @@ LuaLoadGeometrys(
 		//	Vertices.data(), vbByteSize, geo->VertexBufferUploader);
 		//geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(mDevice.Get(), mCmdList.Get(),
 		//	Indices.data(), ibByteSize, geo->IndexBufferUploader);
-
+		DEBUG_MESSAGE("convert meshdata\n");
 		return std::move(geo);
 	};
 
-	return LuaLoadGeometrys<MeshGeometry>(pLuaInter, geoArr, converter);
+	return LuaLoadGeometrys(pLuaInter, geoArr, converter);
 }
 
 template<typename GEOMETRY>
@@ -277,8 +280,9 @@ LuaLoadGeometrys(
 	[&pLuaInter]
 	(std::unique_ptr<GEOMETRY> geo) 
 	{
-
+		DEBUG_MESSAGE("decorated with subMesh names\n");
 		return std::move(geo);
+
 	};
 
 	// this is the function to go into the pLuaInterpreter get the userData,
@@ -288,6 +292,8 @@ LuaLoadGeometrys(
 		userData_to_meshData = 
 		[](void * pointer)
 	{
+		DEBUG_MESSAGE("converte a userdata to the meshdata\n");
+
 		auto pMeshData = reinterpret_cast<LuaPointerContainer<Lua::MeshData> *>(pointer);
 		return pMeshData->pointer;
 	};
@@ -296,11 +302,9 @@ LuaLoadGeometrys(
 	Formater<MaxNameLength> name;
 
 	int geoCount = 0;
-	// open GeometryQueue
-	pLuaInter->GetFieldOnTop("GeometryQueue");
 	// Geometry count
 	pLuaInter->GetFieldOnTop("n");
-	geoCount = pLuaInter->ToNumberAndClear();
+	geoCount = pLuaInter->ToNumberAndPop<int>();
 	
 	for (int i = 1; i <= geoCount; ++i)
 	{
