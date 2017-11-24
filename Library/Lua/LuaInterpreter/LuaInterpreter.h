@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../MyTools/LuaTools.h"
+#include "../../MyTools/Formater.h"
 
 #define Not(x) (!x)
 
@@ -56,6 +57,10 @@ public:
 
 	// pop one element on the top of the stack
 	void Pop();
+
+	// load and call the file,
+	// throws SimpleException whenever there is an error.
+	LuaInterpreter* DoFile(const char * file);
 
 	// can use lambda to directly control the lua_State;
 	void Do(std::function<void(lua_State * L)> func);
