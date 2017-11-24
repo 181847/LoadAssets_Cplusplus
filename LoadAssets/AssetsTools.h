@@ -15,9 +15,10 @@ static const unsigned int MaxNameLength = 256;
 // the function whose name start with Lua mean the function need a LuaInterpreter,
 
 
-// ensure that the assembleSet is sitted at top of the stack.
-// Load Material Data from the luaInterpreter, 
-// the additional Material will be append into the matMap.
+// ensure the MaterialQueue is on the top of the stack
+// the function will access to it,
+// but the function will not pop the MaterialQueue out.
+// the caller should take response for the queue.
 bool LuaLoadMaterial(LuaInterpreter* pLuaInter,
 	std::vector<Material> * matArr);
 
