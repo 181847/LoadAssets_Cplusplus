@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../MyTools/LuaTools.h"
-#include "../../MyTools/Formater.h"
 
 #define Not(x) (!x)
 

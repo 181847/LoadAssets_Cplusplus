@@ -55,7 +55,8 @@ LuaInterpreter * LuaInterpreter::DoFile(const char * file)
 	if (error)
 	{
 		fprintf(stderr, "error:\t%s\n", lua_tostring(m_L, -1));
-		ThrowIfFalse(Not(error) && "do file Error");
+		// must throw the exception.
+		ThrowIfFalse(false && "do file Error");
 	}
 	return this;
 }
