@@ -2,8 +2,6 @@
 //
 
 #include "stdafx.h"
-#include "LuaInterpreter.h"
-#include "lib/DirectX12/FrameResource.h"
 #include "AssetsTools.h"
 
 extern const int gNumFrameResources = 3;
@@ -15,10 +13,13 @@ void execute()
 	// call init lua to start assets loading.
 	int error = luaL_loadfile(luaInter->m_L, "Init.lua") || lua_pcall(luaInter->m_L, 0, 0, 0);
 	
+
 	ASSERT(Not(error));
+	luaInter->Run();
 
 	// The map to store the material data.
 	std::vector<Material> globalMaterial;
+	std::vector<std::unique_ptr<MeshGeometry>> globalGeometrys;
 	// push one empty material into the vector.
 	// so the indices in the vectore is same 
 	// as in the lua.
@@ -27,7 +28,7 @@ void execute()
 	
 
 	// call the Assemble function once
-	lua_getglobal(luaInter->m_L, "Assemble");
+	lua_getglobal(luaInter->m_L, "AssembleFunction");
 	//return 0 stand for no error
 	ThrowIfFalse(0 == lua_pcall(luaInter->m_L, 0, 2, 0));
 	//return false stand for no error
@@ -36,7 +37,11 @@ void execute()
 
 	// Load all the material int the map,
 	// the name will be the key.
+
+	luaInter->GetFieldOnTop("MaterialQueue");
 	LuaLoadMaterial(luaInter.get(), &globalMaterial);
+	luaInter->GetFieldOnTop("GeometryQueue");
+	//LuaLoadGeometrys(luaInter.get(), &globalGeometrys, nullptr, nullptr);
 
 	luaInter->Run();
 

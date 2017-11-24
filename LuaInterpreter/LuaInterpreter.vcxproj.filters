@@ -24,11 +24,8 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Library\Lua\LuaModuls\LuaMeshData\LuaMeshData.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\Lua\LuaModuls\LuaMeshData\LuaMeshDataStruct.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="..\Library\Lua\LuaInterpreter\LuaInterpreter.h">
+      <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -38,7 +35,7 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Library\Lua\LuaModuls\LuaMeshData\LuaMeshData.cpp">
+    <ClCompile Include="..\Library\Lua\LuaInterpreter\LuaInterpreter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,10 +1,13 @@
 #pragma once
-#include "LuaInterpreter.h"
-#include "lib\MyTools\Formater.h"
-#include "lib\luaModuls\LuaMeshData.h"
-#include "lib\MyTools\LuaTools.h"
-#include "lib\DirectX12\FrameResource.h"
-#include <functional>
+
+#include "../Library/Lua/LuaInterpreter/LuaInterpreter.h"
+#include "../Library/Lua/LuaModuls/LuaMeshData/LuaMeshDataStruct.h"
+#include "../Library/MyTools/Formater.h"
+#include "../Library/MyTools/LuaTools.h"
+#include "../Library/DirectX12/FrameResource.h"
+#include "../Library/DirectX12/Common/d3dUtil.h"
+
+#pragma comment(lib, "LuaInterpreter.lib")
 
 static const unsigned int MaxNameLength = 256;
 
@@ -31,12 +34,11 @@ bool LuaLoadSingleMaterial(LuaInterpreter* pLuaInter,
 void ShowDetail(Material & m);
 
 // ensure that the assembleSet is on the top of the stack.
-template<typename GEOMETRY>
-bool 
+bool
 LuaLoadGeometrys(LuaInterpreter* pLuaInter,
-	std::vector<std::unique_ptr<GEOMETRY>> *geoArr,	// store all the geometry
-	Microsoft::WRL::ComPtr<ID3D12Device> mDevice,
-	Microsoft::WRL::ComPtr<ID3D12CommandList> mCmdList);
+	std::vector<std::unique_ptr<MeshGeometry>> *geoArr,	// store all the geometry
+	ID3D12Device * mDevice,
+	ID3D12GraphicsCommandList * mCmdList);
 
 // ensure that the assembleSet is on the top of the stack,
 // here will use a function to convert the MeshData to MeshGeoemtry

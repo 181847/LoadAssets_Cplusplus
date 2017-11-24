@@ -3,12 +3,17 @@ This script is used to config the interpretoer,
 such as adding the search patch.
 --]]
 
+function DebugLogger(message, ...)
+    print('----- DEBUG:', message, ...)
+end
+
 -- AddPath to add a path to the search for loading file
 local function AddPath(path)
     package.path = package.path..";"..path
 end
 
 AddPath("D:\\GitHub\\Lua\\LoadAssets\\?.lua")
+-- AddPath("D:\\GitHub\\Lua\\LoadAssets\\?.dll")
 AddPath(".\\luaScript\\?.lua")
 
 -- store the original 'loadfile', replace it with loadfileInPath
@@ -33,11 +38,17 @@ loadfile = function(filePath)
     end
 end
 
+DebugLogger("loadfile function has been changed")
 
--- this is the function to check if all the assets linked corrected.
 AssembleModule = require("Assemble")
-AssembleFunction = AssembleModule.Assemble
+DebugLogger("Assemble Module loaded")
+
+Assemble = AssembleModule.Assemble
+
+DebugLogger("AssembleFunction Module loaded")
+
 -- from the file adding our file
 startLoadAssets = loadfile("startLoadAssets.lua")
 
 startLoadAssets()
+DebugLogger("Assets load end")

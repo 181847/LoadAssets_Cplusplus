@@ -195,10 +195,10 @@ void ShowDetail(Material & m)
 
 bool 
 LuaLoadGeometrys(
-	LuaInterpreter * pLuaInter, 
-	std::vector<std::unique_ptr<MeshGeometry>>* geoArr, 
-	Microsoft::WRL::ComPtr<ID3D12Device> mDevice, 
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCmdList)
+	LuaInterpreter* pLuaInter,
+	std::vector<std::unique_ptr<MeshGeometry>> *geoArr,	// store all the geometry
+	ID3D12Device * mDevice,
+	ID3D12GraphicsCommandList * mCmdList)
 {
 	// first define a lambda function to convert Lua::MeshData
 	// to the MeshGeometry
@@ -250,7 +250,7 @@ LuaLoadGeometrys(
 		return std::move(geo);
 	};
 
-	return LuaLoadGeometrys(pLuaInter, geoArr, converter);
+	return LuaLoadGeometrys<MeshGeometry>(pLuaInter, geoArr, converter);
 }
 
 template<typename GEOMETRY>
@@ -272,7 +272,7 @@ LuaLoadGeometrys(
 	//						sphere:
 	//							startIndex	= 33
 	//							endIndex	= 75
-	std::function<std::unique_ptr<GEOMETRY>(std::unique_ptr<GEOMETRY> geo> 
+	std::function<std::unique_ptr<GEOMETRY>(std::unique_ptr<GEOMETRY> geo)> 
 		DecorateWithSubMeshName =
 	[&pLuaInter]
 	(std::unique_ptr<GEOMETRY> geo) 

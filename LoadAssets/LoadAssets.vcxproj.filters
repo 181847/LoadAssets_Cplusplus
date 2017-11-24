@@ -13,23 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="lib">
-      <UniqueIdentifier>{111a1e34-6968-4a92-af69-566444c3949e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\MyTools">
-      <UniqueIdentifier>{82fb5c6c-38d8-478a-a651-7eca3b1f1242}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\lua">
-      <UniqueIdentifier>{b568e9a1-a564-4934-b108-5c0492e520bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\DirectX12">
-      <UniqueIdentifier>{dc674ea9-a406-4c56-875d-3acbf1e018ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\DirectX12\Common">
-      <UniqueIdentifier>{e138de33-293d-424a-ae16-12e3c6f09127}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\luaModule">
-      <UniqueIdentifier>{b9bdac47-379b-4c4d-9f2c-fdc2cc9f0a11}</UniqueIdentifier>
+    <Filter Include="libs">
+      <UniqueIdentifier>{8bc2662e-f250-4548-82e5-3885d41e029a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,149 +27,38 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="lib\lua\lapi.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lauxlib.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lcode.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lctype.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\ldebug.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\ldo.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lfunc.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lgc.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\llex.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\llimits.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lmem.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lobject.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lopcodes.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lparser.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lprefix.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lstate.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lstring.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\ltable.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\ltm.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lua.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lua.hpp">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\luaconf.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lualib.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lundump.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lvm.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lua\lzio.h">
-      <Filter>lib\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="LuaInterpreter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\MyTools\DeLinkedList.h">
-      <Filter>lib\MyTools</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\MyTools\LinkedAllocator.h">
-      <Filter>lib\MyTools</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\MyTools\MyAssert.h">
-      <Filter>lib\MyTools</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\MyTools\MyStaticAllocator.h">
-      <Filter>lib\MyTools</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\MyTools\MyTools.h">
-      <Filter>lib\MyTools</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\FrameResource.h">
-      <Filter>lib\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\Camera.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\d3dApp.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\d3dUtil.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\d3dx12.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\DDSTextureLoader.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\GameTimer.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\GeometryGenerator.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\MathHelper.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DirectX12\Common\UploadBuffer.h">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClInclude>
     <ClInclude Include="AssetsTools.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Formater.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="..\Library\DirectX12\Common\d3dUtil.h">
+      <Filter>libs</Filter>
     </ClInclude>
-    <ClInclude Include="lib\luaModuls\LuaMeshData.h">
-      <Filter>lib\luaModule</Filter>
+    <ClInclude Include="..\Library\DirectX12\FrameResource.h">
+      <Filter>libs</Filter>
     </ClInclude>
-    <ClInclude Include="lib\MyTools\Cleaner.h">
-      <Filter>lib\MyTools</Filter>
+    <ClInclude Include="..\Library\DirectX12\Common\Camera.h">
+      <Filter>libs</Filter>
     </ClInclude>
-    <ClInclude Include="lib\MyTools\DLLTools.h">
-      <Filter>lib\MyTools</Filter>
+    <ClInclude Include="..\Library\DirectX12\Common\d3dApp.h">
+      <Filter>libs</Filter>
     </ClInclude>
-    <ClInclude Include="lib\MyTools\LuaTools.h">
-      <Filter>lib\MyTools</Filter>
+    <ClInclude Include="..\Library\DirectX12\Common\d3dx12.h">
+      <Filter>libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\DirectX12\Common\DDSTextureLoader.h">
+      <Filter>libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\DirectX12\Common\GameTimer.h">
+      <Filter>libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\DirectX12\Common\GeometryGenerator.h">
+      <Filter>libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\DirectX12\Common\MathHelper.h">
+      <Filter>libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\DirectX12\Common\UploadBuffer.h">
+      <Filter>libs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,41 +68,32 @@
     <ClCompile Include="LoadAssets.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="LuaInterpreter.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\DirectX12\FrameResource.cpp">
-      <Filter>lib\DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\DirectX12\Common\Camera.cpp">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\DirectX12\Common\d3dApp.cpp">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\DirectX12\Common\d3dUtil.cpp">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\DirectX12\Common\DDSTextureLoader.cpp">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\DirectX12\Common\GameTimer.cpp">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\DirectX12\Common\GeometryGenerator.cpp">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\DirectX12\Common\MathHelper.cpp">
-      <Filter>lib\DirectX12\Common</Filter>
-    </ClCompile>
     <ClCompile Include="AssetsTools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="lib\luaModuls\LuaMeshData.cpp">
-      <Filter>lib\luaModule</Filter>
+    <ClCompile Include="..\Library\DirectX12\FrameResource.cpp">
+      <Filter>libs</Filter>
     </ClCompile>
-    <ClCompile Include="lib\MyTools\Cleaner.cpp">
-      <Filter>lib\MyTools</Filter>
+    <ClCompile Include="..\Library\DirectX12\Common\Camera.cpp">
+      <Filter>libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\DirectX12\Common\d3dApp.cpp">
+      <Filter>libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\DirectX12\Common\d3dUtil.cpp">
+      <Filter>libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\DirectX12\Common\DDSTextureLoader.cpp">
+      <Filter>libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\DirectX12\Common\GameTimer.cpp">
+      <Filter>libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\DirectX12\Common\GeometryGenerator.cpp">
+      <Filter>libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\DirectX12\Common\MathHelper.cpp">
+      <Filter>libs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

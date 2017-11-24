@@ -87,12 +87,13 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ASSERTIONS_ENABLED;CHECK_THROW_IF_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ASSERTIONS_ENABLED;CHECK_THROW_IF_ENABLED;LUAINTERPRETER_IMPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>../Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -149,71 +150,31 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Library\DirectX12\Common\Camera.h" />
+    <ClInclude Include="..\Library\DirectX12\Common\d3dApp.h" />
+    <ClInclude Include="..\Library\DirectX12\Common\d3dUtil.h" />
+    <ClInclude Include="..\Library\DirectX12\Common\d3dx12.h" />
+    <ClInclude Include="..\Library\DirectX12\Common\DDSTextureLoader.h" />
+    <ClInclude Include="..\Library\DirectX12\Common\GameTimer.h" />
+    <ClInclude Include="..\Library\DirectX12\Common\GeometryGenerator.h" />
+    <ClInclude Include="..\Library\DirectX12\Common\MathHelper.h" />
+    <ClInclude Include="..\Library\DirectX12\Common\UploadBuffer.h" />
+    <ClInclude Include="..\Library\DirectX12\FrameResource.h" />
     <ClInclude Include="AssetsTools.h" />
-    <ClInclude Include="Formater.h" />
-    <ClInclude Include="lib\DirectX12\Common\Camera.h" />
-    <ClInclude Include="lib\DirectX12\Common\d3dApp.h" />
-    <ClInclude Include="lib\DirectX12\Common\d3dUtil.h" />
-    <ClInclude Include="lib\DirectX12\Common\d3dx12.h" />
-    <ClInclude Include="lib\DirectX12\Common\DDSTextureLoader.h" />
-    <ClInclude Include="lib\DirectX12\Common\GameTimer.h" />
-    <ClInclude Include="lib\DirectX12\Common\GeometryGenerator.h" />
-    <ClInclude Include="lib\DirectX12\Common\MathHelper.h" />
-    <ClInclude Include="lib\DirectX12\Common\UploadBuffer.h" />
-    <ClInclude Include="lib\DirectX12\FrameResource.h" />
-    <ClInclude Include="lib\luaModuls\LuaMeshData.h" />
-    <ClInclude Include="lib\lua\lapi.h" />
-    <ClInclude Include="lib\lua\lauxlib.h" />
-    <ClInclude Include="lib\lua\lcode.h" />
-    <ClInclude Include="lib\lua\lctype.h" />
-    <ClInclude Include="lib\lua\ldebug.h" />
-    <ClInclude Include="lib\lua\ldo.h" />
-    <ClInclude Include="lib\lua\lfunc.h" />
-    <ClInclude Include="lib\lua\lgc.h" />
-    <ClInclude Include="lib\lua\llex.h" />
-    <ClInclude Include="lib\lua\llimits.h" />
-    <ClInclude Include="lib\lua\lmem.h" />
-    <ClInclude Include="lib\lua\lobject.h" />
-    <ClInclude Include="lib\lua\lopcodes.h" />
-    <ClInclude Include="lib\lua\lparser.h" />
-    <ClInclude Include="lib\lua\lprefix.h" />
-    <ClInclude Include="lib\lua\lstate.h" />
-    <ClInclude Include="lib\lua\lstring.h" />
-    <ClInclude Include="lib\lua\ltable.h" />
-    <ClInclude Include="lib\lua\ltm.h" />
-    <ClInclude Include="lib\lua\lua.h" />
-    <ClInclude Include="lib\lua\lua.hpp" />
-    <ClInclude Include="lib\lua\luaconf.h" />
-    <ClInclude Include="lib\lua\lualib.h" />
-    <ClInclude Include="lib\lua\lundump.h" />
-    <ClInclude Include="lib\lua\lvm.h" />
-    <ClInclude Include="lib\lua\lzio.h" />
-    <ClInclude Include="lib\MyTools\Cleaner.h" />
-    <ClInclude Include="lib\MyTools\DeLinkedList.h" />
-    <ClInclude Include="lib\MyTools\DLLTools.h" />
-    <ClInclude Include="lib\MyTools\LinkedAllocator.h" />
-    <ClInclude Include="lib\MyTools\LuaTools.h" />
-    <ClInclude Include="lib\MyTools\MyAssert.h" />
-    <ClInclude Include="lib\MyTools\MyStaticAllocator.h" />
-    <ClInclude Include="lib\MyTools\MyTools.h" />
-    <ClInclude Include="LuaInterpreter.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Library\DirectX12\Common\Camera.cpp" />
+    <ClCompile Include="..\Library\DirectX12\Common\d3dApp.cpp" />
+    <ClCompile Include="..\Library\DirectX12\Common\d3dUtil.cpp" />
+    <ClCompile Include="..\Library\DirectX12\Common\DDSTextureLoader.cpp" />
+    <ClCompile Include="..\Library\DirectX12\Common\GameTimer.cpp" />
+    <ClCompile Include="..\Library\DirectX12\Common\GeometryGenerator.cpp" />
+    <ClCompile Include="..\Library\DirectX12\Common\MathHelper.cpp" />
+    <ClCompile Include="..\Library\DirectX12\FrameResource.cpp" />
     <ClCompile Include="AssetsTools.cpp" />
-    <ClCompile Include="lib\DirectX12\Common\Camera.cpp" />
-    <ClCompile Include="lib\DirectX12\Common\d3dApp.cpp" />
-    <ClCompile Include="lib\DirectX12\Common\d3dUtil.cpp" />
-    <ClCompile Include="lib\DirectX12\Common\DDSTextureLoader.cpp" />
-    <ClCompile Include="lib\DirectX12\Common\GameTimer.cpp" />
-    <ClCompile Include="lib\DirectX12\Common\GeometryGenerator.cpp" />
-    <ClCompile Include="lib\DirectX12\Common\MathHelper.cpp" />
-    <ClCompile Include="lib\DirectX12\FrameResource.cpp" />
-    <ClCompile Include="lib\luaModuls\LuaMeshData.cpp" />
-    <ClCompile Include="lib\MyTools\Cleaner.cpp" />
     <ClCompile Include="LoadAssets.cpp" />
-    <ClCompile Include="LuaInterpreter.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
