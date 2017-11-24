@@ -34,26 +34,6 @@ int LuaInterpreter::GetStackSize()
 	return lua_gettop(m_L);
 }
 
-lua_Number LuaInterpreter::ToNumberAndClear()
-{
-	ASSERT(m_L);
-	int isNum = 0;
-	auto ret = lua_tonumberx(m_L, -1, &isNum);
-	ThrowIfFalse(isNum);
-	lua_pop(m_L, 1);
-	return ret;
-}
-
-lua_Integer LuaInterpreter::ToIntegerAndClear()
-{
-	ASSERT(m_L);
-	int isNum = 0;
-	auto ret = lua_tointegerx(m_L, -1, &isNum);
-	ThrowIfFalse(isNum);
-	lua_pop(m_L, 1);
-	return ret;
-}
-
 void LuaInterpreter::GetFieldOnTop(const char * key)
 {
 	lua_getfield(m_L, -1, key);
