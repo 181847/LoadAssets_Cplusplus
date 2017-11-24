@@ -61,7 +61,7 @@ public:
 #endif
 
 
-#undef SHOW_DEBUG_MESSAGE
+//#undef SHOW_DEBUG_MESSAGE
 
 // print some message only in the debug mode.
 #ifdef SHOW_DEBUG_MESSAGE
