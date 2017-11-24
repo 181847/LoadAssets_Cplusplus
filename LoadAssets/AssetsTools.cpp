@@ -34,12 +34,6 @@ bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
 		pLuaInter->Pop();
 	}
 
-	for (auto & m : *matArr)
-	{
-		ShowDetail(m);
-		putchar('\n');
-	}
-
 	return true;
 }
 
@@ -60,7 +54,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	char matName[StringMaxLength];
 	pLuaInter->GetFieldOnTop("name");
 	pLuaInter->ToStringAndClear<StringMaxLength>(matName);
-	printf("Material Name; %s\n", matName);
+	DEBUG_MESSAGE("Material Name; %s\n", matName);
 
 	// get diffuseAlbedo, contain 4 number;
 	float dAlbe = 0;
@@ -70,7 +64,6 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	{
 		pLuaInter->GetIndexOnTop(i);
 		dAlbe = pLuaInter->ToNumberAndPop<float>();
-		printf("diffuseAlbedo[%d]: %lf\n", i, dAlbe);
 		
 		switch (i)
 		{
@@ -100,8 +93,6 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	{
 		pLuaInter->GetIndexOnTop(i);
 		fresnelR = pLuaInter->ToNumberAndPop<float>();
-		printf("fresnelR[%d]: %lf\n", i, fresnelR);
-
 
 		switch (i)
 		{
@@ -124,7 +115,6 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	// roughness is just one number
 	pLuaInter->GetFieldOnTop("roughness");
 	float roughness = pLuaInter->ToNumberAndPop<float>();
-	printf("roughness: %lf\n", roughness);
 	material.Roughness = roughness;
 
 	//diffuseMap
@@ -133,19 +123,15 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	// does the material contain any diffuseMap?
 	if (pLuaInter->IsNil()) // no
 	{
-		printf("No diffuse map.\n");
 		material.DiffuseSrvHeapIndex = 0;
 		pLuaInter->Pop();
-
 	}
 	else //yes
 	{
+		// diffuse map name
 		pLuaInter->ToStringAndClear<StringMaxLength>(diffuseMapName);
-		printf("diffuseMapName: %s\n", diffuseMapName);
-
 		pLuaInter->GetFieldOnTop("diffuseMapIndex");
 		int diffuseMapIndex = pLuaInter->ToIntegerAndPop<int>();
-		printf("DiffuseMapIndex: %d\n", diffuseMapIndex);
 		material.DiffuseSrvHeapIndex = diffuseMapIndex;
 	}
 	// do not need to pop any thing, material is on the top
@@ -156,18 +142,14 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	// does the material contain any normalMap?
 	if (pLuaInter->IsNil()) // no
 	{
-		printf("No normal map.\n");
 		material.NormalSrvHeapIndex = 0;
 		pLuaInter->Pop();
 	}
 	else //yes
 	{
 		pLuaInter->ToStringAndClear<StringMaxLength>(normalMapName);
-		printf("normalMapName: %s\n", normalMapName);
-
 		pLuaInter->GetFieldOnTop("normalMapIndex");
 		int normalMapIndex = pLuaInter->ToIntegerAndPop<int>();
-		printf("NormalMapIndex: %d\n", normalMapIndex);
 		material.NormalSrvHeapIndex = normalMapIndex;
 	}
 	// do not need to pop any thing, material is on the top
