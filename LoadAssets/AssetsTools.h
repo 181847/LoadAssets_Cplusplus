@@ -31,9 +31,6 @@ bool LuaLoadMaterial(LuaInterpreter* pLuaInter,
 bool LuaLoadSingleMaterial(LuaInterpreter* pLuaInter,
 	std::vector<Material> * matArr);
 
-// A debug function to show the Material data.
-void ShowDetail(Material & m);
-
 // ensure that the assembleSet is on the top of the stack.
 bool
 LuaLoadGeometrys(LuaInterpreter* pLuaInter,
@@ -51,3 +48,6 @@ LuaLoadGeometrys(LuaInterpreter* pLuaInter,
 	// a function to convert the Lua::MeshData to MeshGeometry
 	std::function<std::unique_ptr<GEOMETRY>(std::string& name, Lua::MeshData *)> converter);
 
+
+// A debug function to show the Material data.
+void ShowDetail(Material & m);
