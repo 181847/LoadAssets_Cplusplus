@@ -184,65 +184,6 @@ void ShowDetail(Material & m)
 	
 }// ShowDetail
 
-bool 
-LuaLoadGeometrys(
-	LuaInterpreter* pLuaInter,
-	std::vector<std::unique_ptr<MeshGeometry>> *geoArr,	// store all the geometry
-	ID3D12Device * mDevice,
-	ID3D12GraphicsCommandList * mCmdList)
-{
-	// first define a lambda function to convert Lua::MeshData
-	// to the MeshGeometry
-	std::function<
-		std::unique_ptr<MeshGeometry>
-		(std::string& name, Lua::MeshData *)>
-	converter = 
-
-		// lambda
-	[mDevice, mCmdList]
-	(std::string& name, Lua::MeshData* pMd) 
-		-> std::unique_ptr<MeshGeometry>
-	{
-		auto &Vertices	= pMd->Vertices;
-		auto &Indices	= pMd->GetIndices16();
-		const UINT VertexCount		= Vertices.size();
-		const UINT IndexCount		= Indices.size();
-
-		// using the MeshData to fill the indices
-		std::vector<uint16_t> totalIndices;
-
-		totalIndices.insert(totalIndices.end(),
-			std::begin(pMd->GetIndices16()), std::end(pMd->GetIndices16()));
-
-		// by default, we will use the Lua::Vertex as the
-		// vertex struct, which contain the:
-		// position(3)/normal(3)/textureCoord(2)/tangentU(3)
-		const UINT vbByteSize = VertexCount * sizeof(Lua::Vertex);
-		const UINT ibByteSize = IndexCount * sizeof(std::uint16_t);
-
-		auto geo = std::make_unique<MeshGeometry>();
-		geo->Name					= name;
-		geo->VertexBufferByteSize	= vbByteSize;
-		geo->IndexBufferByteSize	= ibByteSize;
-		geo->VertexByteStride		= (UINT)sizeof(Vertex);
-		geo->IndexFormat			= DXGI_FORMAT_R16_UINT;
-
-		ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
-		ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
-
-		CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), Vertices.data(), vbByteSize);
-		CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), Indices.data(), ibByteSize);
-
-		//geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(mDevice.Get(), mCmdList.Get(),
-		//	Vertices.data(), vbByteSize, geo->VertexBufferUploader);
-		//geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(mDevice.Get(), mCmdList.Get(),
-		//	Indices.data(), ibByteSize, geo->IndexBufferUploader);
-		DEBUG_MESSAGE("convert meshdata\n");
-		return std::move(geo);
-	};
-
-	return LuaLoadGeometrys(pLuaInter, geoArr, converter);
-}// LuaLoadGeometrys
 
 template<typename GEOMETRY>
 bool 
@@ -253,25 +194,6 @@ LuaLoadGeometrys(
 {
 	ASSERT(pLuaInter);
 	ASSERT(geoArr);
-
-	// this is a funciton to get the subMesh name from the LuaInterpreter.
-	// Before call the function, ensure that the subMeshes is on the top of the stack,
-	// stack top -> subMeshes
-	//						box:
-	//							startIndex	= 1
-	//							endIndex	= 32
-	//						sphere:
-	//							startIndex	= 33
-	//							endIndex	= 75
-	std::function<std::unique_ptr<GEOMETRY>(std::unique_ptr<GEOMETRY> geo)> 
-		DecorateWithSubMeshName =
-	[&pLuaInter]
-	(std::unique_ptr<GEOMETRY> geo) 
-	{
-		DEBUG_MESSAGE("decorated with subMesh names\n");
-		return std::move(geo);
-
-	};
 
 	// this is the function to go into the pLuaInterpreter get the userData,
 	// then convert it to the expected pointer,
@@ -322,6 +244,67 @@ LuaLoadGeometrys(
 	return false;
 }// LuaLoadGeometrys
 
+
+ //
+ //bool 
+ //LuaLoadGeometrys(
+ //	LuaInterpreter* pLuaInter,
+ //	std::vector<std::unique_ptr<MeshGeometry>> *geoArr,	// store all the geometry
+ //	ID3D12Device * mDevice,
+ //	ID3D12GraphicsCommandList * mCmdList)
+ //{
+ //	// first define a lambda function to convert Lua::MeshData
+ //	// to the MeshGeometry
+ //	std::function<
+ //		std::unique_ptr<MeshGeometry>
+ //		(std::string& name, Lua::MeshData *)>
+ //	converter = 
+ //
+ //		// lambda
+ //	[mDevice, mCmdList]
+ //	(std::string& name, Lua::MeshData* pMd) 
+ //		-> std::unique_ptr<MeshGeometry>
+ //	{
+ //		auto &Vertices	= pMd->Vertices;
+ //		auto &Indices	= pMd->GetIndices16();
+ //		const UINT VertexCount		= Vertices.size();
+ //		const UINT IndexCount		= Indices.size();
+ //
+ //		// using the MeshData to fill the indices
+ //		std::vector<uint16_t> totalIndices;
+ //
+ //		totalIndices.insert(totalIndices.end(),
+ //			std::begin(pMd->GetIndices16()), std::end(pMd->GetIndices16()));
+ //
+ //		// by default, we will use the Lua::Vertex as the
+ //		// vertex struct, which contain the:
+ //		// position(3)/normal(3)/textureCoord(2)/tangentU(3)
+ //		const UINT vbByteSize = VertexCount * sizeof(Lua::Vertex);
+ //		const UINT ibByteSize = IndexCount * sizeof(std::uint16_t);
+ //
+ //		auto geo = std::make_unique<MeshGeometry>();
+ //		geo->Name					= name;
+ //		geo->VertexBufferByteSize	= vbByteSize;
+ //		geo->IndexBufferByteSize	= ibByteSize;
+ //		geo->VertexByteStride		= (UINT)sizeof(Vertex);
+ //		geo->IndexFormat			= DXGI_FORMAT_R16_UINT;
+ //
+ //		ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+ //		ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+ //
+ //		CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), Vertices.data(), vbByteSize);
+ //		CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), Indices.data(), ibByteSize);
+ //
+ //		//geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(mDevice.Get(), mCmdList.Get(),
+ //		//	Vertices.data(), vbByteSize, geo->VertexBufferUploader);
+ //		//geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(mDevice.Get(), mCmdList.Get(),
+ //		//	Indices.data(), ibByteSize, geo->IndexBufferUploader);
+ //		DEBUG_MESSAGE("convert meshdata\n");
+ //		return std::move(geo);
+ //	};
+ //
+ //	return LuaLoadGeometrys(pLuaInter, geoArr, converter);
+ //}// LuaLoadGeometrys
 
 }// namespace LoadAssets
 }// namespace Lua
