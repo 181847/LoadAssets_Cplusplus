@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{65B0ACDE-04DA-4BEB-93F1-766C6335E0C7}</ProjectGuid>
+    <ProjectGuid>{C2792F24-6F48-4DFB-B177-64D5C116AAA1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>LoadAssets</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
@@ -87,7 +87,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ASSERTIONS_ENABLED;CHECK_THROW_IF_ENABLED;LUAINTERPRETER_IMPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;LUAINTERPRETER_IMPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -150,30 +150,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Library\DirectX12\Common\Camera.h" />
-    <ClInclude Include="..\Library\DirectX12\Common\d3dApp.h" />
-    <ClInclude Include="..\Library\DirectX12\Common\d3dUtil.h" />
-    <ClInclude Include="..\Library\DirectX12\Common\d3dx12.h" />
-    <ClInclude Include="..\Library\DirectX12\Common\DDSTextureLoader.h" />
-    <ClInclude Include="..\Library\DirectX12\Common\GameTimer.h" />
-    <ClInclude Include="..\Library\DirectX12\Common\GeometryGenerator.h" />
-    <ClInclude Include="..\Library\DirectX12\Common\MathHelper.h" />
-    <ClInclude Include="..\Library\DirectX12\Common\UploadBuffer.h" />
-    <ClInclude Include="..\Library\DirectX12\FrameResource.h" />
-    <ClInclude Include="AssetsTools.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Library\DirectX12\Common\Camera.cpp" />
-    <ClCompile Include="..\Library\DirectX12\Common\d3dApp.cpp" />
-    <ClCompile Include="..\Library\DirectX12\Common\d3dUtil.cpp" />
-    <ClCompile Include="..\Library\DirectX12\Common\DDSTextureLoader.cpp" />
-    <ClCompile Include="..\Library\DirectX12\Common\GameTimer.cpp" />
-    <ClCompile Include="..\Library\DirectX12\Common\GeometryGenerator.cpp" />
-    <ClCompile Include="..\Library\DirectX12\Common\MathHelper.cpp" />
-    <ClCompile Include="..\Library\DirectX12\FrameResource.cpp" />
-    <ClCompile Include="AssetsTools.cpp" />
     <ClCompile Include="LoadAssets.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
