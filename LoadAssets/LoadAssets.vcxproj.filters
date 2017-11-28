@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="libs">
-      <UniqueIdentifier>{8bc2662e-f250-4548-82e5-3885d41e029a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -27,72 +24,12 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\d3dUtil.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\FrameResource.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\Camera.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\d3dApp.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\d3dx12.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\DDSTextureLoader.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\GameTimer.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\GeometryGenerator.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\MathHelper.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Library\DirectX12\Common\UploadBuffer.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetsTools.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="LoadAssets.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Library\DirectX12\FrameResource.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Library\DirectX12\Common\Camera.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Library\DirectX12\Common\d3dApp.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Library\DirectX12\Common\d3dUtil.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Library\DirectX12\Common\DDSTextureLoader.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Library\DirectX12\Common\GameTimer.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Library\DirectX12\Common\GeometryGenerator.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Library\DirectX12\Common\MathHelper.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetsTools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
