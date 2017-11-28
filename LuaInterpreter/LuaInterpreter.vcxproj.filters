@@ -24,7 +24,7 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Library\Lua\LuaInterpreter\LuaInterpreter.h">
+    <ClInclude Include="..\..\Library\Lua\LuaInterpreter\LuaInterpreter.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Library\Lua\LuaInterpreter\LuaInterpreter.cpp">
+    <ClCompile Include="..\..\Library\Lua\LuaInterpreter\LuaInterpreter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

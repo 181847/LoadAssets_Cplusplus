@@ -6,6 +6,12 @@
 #define ShowStackSize(luaInterpreter)
 #endif
 
+namespace Lua
+{
+namespace LoadAssets
+{
+
+
 bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
 	std::vector<Material> * matArr)
 {
@@ -35,7 +41,7 @@ bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
 	}
 
 	return true;
-}
+}// LuaLoadMaterial
 
 bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	std::vector<Material> * matArr)
@@ -160,7 +166,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	// insert into the map
 	matArr->push_back(material);
 	return true;
-}
+}// LuaLoadSingleMaterial
 
 void ShowDetail(Material & m)
 {
@@ -176,7 +182,7 @@ void ShowDetail(Material & m)
 	printf("diffuseMapIndex: %d\n", m.DiffuseSrvHeapIndex);
 	printf("normalMapIndex: %d\n", m.NormalSrvHeapIndex);
 	
-}
+}// ShowDetail
 
 bool 
 LuaLoadGeometrys(
@@ -236,7 +242,7 @@ LuaLoadGeometrys(
 	};
 
 	return LuaLoadGeometrys(pLuaInter, geoArr, converter);
-}
+}// LuaLoadGeometrys
 
 template<typename GEOMETRY>
 bool 
@@ -314,4 +320,8 @@ LuaLoadGeometrys(
 	// pop GeometryQueue
 	pLuaInter->Pop();
 	return false;
-}
+}// LuaLoadGeometrys
+
+
+}// namespace LoadAssets
+}// namespace Lua

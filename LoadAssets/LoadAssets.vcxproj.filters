@@ -27,9 +27,6 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="AssetsTools.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\Library\DirectX12\Common\d3dUtil.h">
       <Filter>libs</Filter>
     </ClInclude>
@@ -66,9 +63,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="LoadAssets.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetsTools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\Library\DirectX12\FrameResource.cpp">

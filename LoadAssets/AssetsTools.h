@@ -9,8 +9,12 @@
 
 #pragma comment(lib, "LuaInterpreter.lib")
 
-static const unsigned int MaxNameLength = 256;
+namespace Lua
+{
+namespace LoadAssets
+{
 
+static const unsigned int MaxNameLength = 256;
 // This is a header which define many tool function to load assets,
 // the function whose name start with Lua mean the function need a LuaInterpreter,
 
@@ -45,9 +49,14 @@ template<typename GEOMETRY>
 bool
 LuaLoadGeometrys(LuaInterpreter* pLuaInter,
 	std::vector<std::unique_ptr<GEOMETRY>> *geoArr,	// store all the geometry
-	// a function to convert the Lua::MeshData to MeshGeometry
-	std::function<std::unique_ptr<GEOMETRY>(std::string& name, Lua::MeshData *)> converter);
-
+													// a function to convert the Lua::MeshData to MeshGeometry
+	std::function<std::unique_ptr<GEOMETRY>(std::string& name, Lua::MeshData *)> converter,
+	std::function<void(std::string, UINT startIndex, UINT endIndex)> subMeshCollector);
 
 // A debug function to show the Material data.
 void ShowDetail(Material & m);
+
+
+}// namespace LoadAssets
+}// Lua
+

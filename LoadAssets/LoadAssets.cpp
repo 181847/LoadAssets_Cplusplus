@@ -2,6 +2,8 @@
 //
 
 #include "stdafx.h"
+#include "../../Library/Lua/LuaInterpreter/LuaInterpreter.h"
+#pragma comment(lib, "LuaInterpreter.lib")
 #include "AssetsTools.h"
 
 extern const int gNumFrameResources = 3;
@@ -35,12 +37,12 @@ void execute()
 	// the name will be the key.
 
 	luaInter->GetFieldOnTop("MaterialQueue");
-	LuaLoadMaterial(luaInter.get(), &globalMaterial);
+	//LuaLoadMaterial(luaInter.get(), &globalMaterial);
 	luaInter->Pop();
 	// pop the MaterialQueue
 
 	luaInter->GetFieldOnTop("GeometryQueue");
-	LuaLoadGeometrys(luaInter.get(), &globalGeometrys, nullptr, nullptr);
+	//LuaLoadGeometrys(luaInter.get(), &globalGeometrys, nullptr, nullptr);
 	luaInter->Pop();
 	// pop the GeometryQueue
 
@@ -48,7 +50,7 @@ void execute()
 
 	for (auto & m : globalMaterial)
 	{
-		ShowDetail(m);
+		//ShowDetail(m);
 		putchar('\n');
 	}
 
@@ -57,7 +59,7 @@ void execute()
 	{
 		DEBUG_MESSAGE("%s\t\t%d\t\t%d\t\t\t\n", g->Name.c_str(), g->IndexBufferByteSize, g->VertexBufferByteSize);
 	}
-
+	*/
 	luaInter->Run();
 
 	fprintf(stdout, "Program terminate.");
