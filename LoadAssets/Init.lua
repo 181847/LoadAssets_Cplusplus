@@ -40,15 +40,18 @@ end
 
 DebugLogger("loadfile function has been changed")
 
-AssembleModule = require("Assemble")
+--AssembleModule = require("Assemble")
 DebugLogger("Assemble Module loaded")
 
-Assemble = AssembleModule.Assemble
+--Assemble = AssembleModule.Assemble
 
 DebugLogger("AssembleFunction Module loaded")
 
 -- from the file adding our file
-startLoadAssets = loadfile("startLoadAssets.lua")
+--startLoadAssets = loadfile("startLoadAssets.lua")
 
-startLoadAssets()
+--startLoadAssets()
 DebugLogger("Assets load end")
+
+
+t = {a = 1, b = 2, c = 3}

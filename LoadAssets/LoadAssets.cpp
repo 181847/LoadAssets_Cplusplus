@@ -3,18 +3,30 @@
 
 #include "stdafx.h"
 #include "../../Library/Lua/LuaInterpreter/LuaInterpreter.h"
-#pragma comment(lib, "LuaInterpreter.lib")
 #include "AssetsTools.h"
+#pragma comment(lib, "LuaInterpreter.lib")
 
 extern const int gNumFrameResources = 3;
 
 void execute()
 {
-	std::unique_ptr<LuaInterpreter> luaInter = std::make_unique<LuaInterpreter>();
+	std::unique_ptr<Lua::LuaInterpreter> luaInter = std::make_unique<Lua::LuaInterpreter>();
 
 	// call init lua to start assets loading.
 	luaInter->DoFile("Init.lua");
 
+	int a, b, c;
+	luaInter->GetGlobal("t")
+		->GetFieldOnTop("a")
+			->ToIntegerAndPop(&a)
+		->GetFieldOnTop("b")
+			->ToIntegerAndPop(&b)
+		->GetFieldOnTop("c")
+			->ToIntegerAndPop(&c);
+
+	printf("a:%d, b:%d, c:%d\n", a, b, c);
+
+	/*
 	// The map to store the material data.
 	std::vector<Material> globalMaterial;
 	std::vector<std::unique_ptr<MeshGeometry>> globalGeometrys;
@@ -53,7 +65,7 @@ void execute()
 		//ShowDetail(m);
 		putchar('\n');
 	}
-
+	/*
 	DEBUG_MESSAGE("geoname\t\tindexbytesize\t\tvertexbytesize\t\t\n");
 	for (auto & g : globalGeometrys)
 	{
