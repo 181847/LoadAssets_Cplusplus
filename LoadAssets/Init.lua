@@ -55,3 +55,6 @@ DebugLogger("Assets load end")
 
 
 t = {a = 1, b = 2, c = 3}
+t[1] = 4
+t[2] = 5
+t[3] = 6
