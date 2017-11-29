@@ -9,6 +9,7 @@
 
 #pragma comment(lib, "LuaInterpreter.lib")
 
+
 namespace Lua
 {
 namespace LoadAssets
@@ -65,8 +66,43 @@ LuaLoadGeometrys(
 	std::function<std::unique_ptr<GEOMETRY>(std::string&name, Lua::MeshData*)> converter, 
 	std::function<void(std::string, UINT startIndex, UINT endIndex)> subMeshCollector)
 {
-	pLuaInter->GetFieldOnTop("GeometryQueue");
-	return false;
+	// @ pLuaInter
+	pLuaInter	
+		->GetFieldOnTop("GeometryQueue")
+			// ---> foreach each geometry
+			->Foreach([&geoArr](LUA_INTERPRETER_FOEEACH_LAMBDA_ARGS) {
+				if (keyIsNumber)
+				{
+					DEBUG_MESSAGE("iterate a geometry index:%d\n", keyItg);
+					MeshData* pmd;
+
+					// @ pLuaInter
+					pLuaInter
+						->GetFieldOnTop("meshData")
+							->ToUserDataAndClear<Lua::MeshData>("LoadAssets.MeshData", pmd)
+						->GetFieldOnTop("SubMeshes")
+							// ---> for each subMesh there are two integer that we should get.
+							->Foreach([](LUA_INTERPRETER_FOEEACH_LAMBDA_ARGS) {
+								if (Not(keyIsNumber))
+								{
+									int startIndex = 0, endIndex = 0;
+									// @ pLuaInter
+									pLuaInter
+										->GetFieldOnTop("startIndex")
+											->ToIntegerAndPop(&startIndex)
+										->GetFieldOnTop("endIndex")
+											->ToIntegerAndPop(&endIndex);
+									subMeshCollector(std:;string(keyStr), startIndex, endIndex);
+								}// <==> end if keyIsNumber
+							});
+							// ---> end Foreach
+					geoArr->push_back(converter(pmd));
+					DEBUG_MESSAGE("geometry end");
+				}// <==> end if keyIsNumber
+			})
+			// ---> end Foreach
+		->Pop();// pop GeometryQueue
+	return true;
 }
 
 }// namespace LoadAssets
