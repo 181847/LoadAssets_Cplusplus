@@ -15,17 +15,30 @@ void execute()
 	// call init lua to start assets loading.
 	luaInter->DoFile("Init.lua");
 
+	// 下面是用于测试的一端代码
+	/*luaInter->GetGlobal("t")
+				->Foreach([](LUA_INTERPRETER_FOEEACH_LAMBDA_ARGS) {
+					if ( ! keyIsNumber)
+					{
+						printf("key: %s\tvalue:%d\n", keyStr, pLuaInter->ToIntegerAndPop());
+					}
+					else
+					{
+						int value = pLuaInter->ToIntegerAndPop<int>();
+						printf("index: %d\tvalue:%d\n", keyItg, value);
+					}
+				});
+
 	int a, b, c;
 	luaInter->GetGlobal("t")
-		->GetFieldOnTop("a")
-			->ToIntegerAndPop(&a)
-		->GetFieldOnTop("b")
-			->ToIntegerAndPop(&b)
-		->GetFieldOnTop("c")
-			->ToIntegerAndPop(&c);
-
+			->GetFieldOnTop("a")
+		->ToIntegerAndPop(&a)
+			->GetFieldOnTop("b")
+		->ToIntegerAndPop(&b)
+			->GetFieldOnTop("c")
+		->ToIntegerAndPop(&c);
 	printf("a:%d, b:%d, c:%d\n", a, b, c);
-
+*/
 	/*
 	// The map to store the material data.
 	std::vector<Material> globalMaterial;
