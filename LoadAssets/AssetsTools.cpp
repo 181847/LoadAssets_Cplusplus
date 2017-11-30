@@ -61,6 +61,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	pLuaInter->GetFieldOnTop("name");
 	pLuaInter->ToStringAndClear<StringMaxLength>(matName);
 	DEBUG_MESSAGE("Material Name; %s\n", matName);
+	material.Name = matName;
 
 	// get diffuseAlbedo, contain 4 number;
 	float dAlbe = 0;
@@ -103,13 +104,13 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 		switch (i)
 		{
 		case 1:
-			material.FresnelR0.x = dAlbe;
+			material.FresnelR0.x = fresnelR;
 			break;
 		case 2:
-			material.FresnelR0.y = dAlbe;
+			material.FresnelR0.y = fresnelR;
 			break;
 		case 3:
-			material.FresnelR0.z = dAlbe;
+			material.FresnelR0.z = fresnelR;
 			break;
 		default:
 			ThrowIfFalse(false && "It is impossible.");
@@ -142,7 +143,7 @@ bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	}
 	// do not need to pop any thing, material is on the top
 
-	//diffuseMap
+	//normalMap
 	char normalMapName[StringMaxLength];
 	pLuaInter->GetFieldOnTop("normalMap");
 	// does the material contain any normalMap?
