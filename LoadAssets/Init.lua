@@ -2,19 +2,26 @@
 This script is used to config the interpretoer,
 such as adding the search patch.
 --]]
+print("Start Initialization")
 
 function DebugLogger(message, ...)
     print('----- DEBUG:', message, ...)
 end
 
 -- AddPath to add a path to the search for loading file
-local function AddPath(path)
+function AddPath(path)
     package.path = package.path..";"..path
 end
 
-AddPath("D:\\GitHub\\Lua\\LoadAssets\\?.lua")
--- AddPath("D:\\GitHub\\Lua\\LoadAssets\\?.dll")
-AddPath(".\\luaScript\\?.lua")
+-- add path for the C module such as the dll
+function AddCPath(path)
+    package.cpath = package.cpath..";"..path
+end
+
+-- print the key, value in a table
+function PrintTable(t)
+    for k, v in pairs(t) do print(k, v) end
+end
 
 -- store the original 'loadfile', replace it with loadfileInPath
 old_loadfile = loadfile
@@ -38,23 +45,10 @@ loadfile = function(filePath)
     end
 end
 
-DebugLogger("loadfile function has been changed")
+print("Initialization Completed")
 
---AssembleModule = require("Assemble")
-DebugLogger("Assemble Module loaded")
+local SU = assert(loadfile("StartUp.lua"))
 
---Assemble = AssembleModule.Assemble
-
-DebugLogger("AssembleFunction Module loaded")
-
--- from the file adding our file
---startLoadAssets = loadfile("startLoadAssets.lua")
-
---startLoadAssets()
-DebugLogger("Assets load end")
-
-
-t = {a = 1, b = 2, c = 3}
-t[1] = 4
-t[2] = 5
-t[3] = 6
+if SU then
+    SU()
+end
