@@ -100,66 +100,6 @@ void ShowDetail(Material & m)
 }// ShowDetail
 
 
-template<typename GEOMETRY>
-bool 
-LuaLoadGeometrys(
-	LuaInterpreter * pLuaInter, 
-	std::vector<std::unique_ptr<GEOMETRY>>* geoArr, 
-	std::function<std::unique_ptr<GEOMETRY>(std::string&name, Lua::MeshData*)> converter)
-{
-	ASSERT(pLuaInter);
-	ASSERT(geoArr);
-
-	// this is the function to go into the pLuaInterpreter get the userData,
-	// then convert it to the expected pointer,
-	// here we converte the userdata(void*) to the Lua::MeshData*
-	std::function<Lua::MeshData*(void *)> 
-		userData_to_meshData = 
-		[](void * pointer)
-	{
-		DEBUG_MESSAGE("converte a userdata to the meshdata\n");
-
-		auto pMeshData = reinterpret_cast<LuaPointerContainer<Lua::MeshData> *>(pointer);
-		return pMeshData->pointer;
-	};
-
-	// help get the name
-	Formater<MaxNameLength> name;
-
-	int geoCount = 0;
-	// Geometry count
-	pLuaInter->GetFieldOnTop("n");
-	geoCount = pLuaInter->ToNumberAndPop<int>();
-	
-	for (int i = 1; i <= geoCount; ++i)
-	{
-		// one Geometry instance
-		pLuaInter->GetIndexOnTop(i);
-
-		// get geometry name 
-		pLuaInter->GetFieldOnTop("name");
-		pLuaInter->ToStringAndClear<MaxNameLength>(name.bufferPointer());
-		std::string geoName = name.bufferPointer();
-
-		// get meshData
-		pLuaInter->GetFieldOnTop("meshData");
-		auto * pMeshData = pLuaInter->ToUserDataAndClear("Lua.MeshData", userData_to_meshData);
-
-		auto geo = converter(geoName, pMeshData);
-		
-		geoArr->push_back(std::move(geo));
-		
-		// pop Geometry instance
-		pLuaInter->Pop();
-	}
-
-
-	// pop GeometryQueue
-	pLuaInter->Pop();
-	return false;
-}// LuaLoadGeometrys
-
-
  //
  //bool 
  //LuaLoadGeometrys(
