@@ -50,7 +50,7 @@
 		break;									\
 	case 2:										\
 		receiver.z = data;						\
-		break;						\
+		break;									\
 	default:									\
 		ASSERT(false && "map data to x//y//z failed ");	\
 	}											\
@@ -73,83 +73,21 @@ static const unsigned int MaxNameLength = 256;
 bool LuaLoadMaterial(LuaInterpreter* pLuaInter,
 	std::vector<Material> * matArr);
 
-
-
-// Before called, ensure the stack top is a material,
-// call the function to get one material into the matMap,
-// then clear the stack to where the top material
-// (the material also be popped).
-bool LuaLoadSingleMaterial(LuaInterpreter* pLuaInter,
-	std::vector<Material> * matArr);
-
-// ensure that the assembleSet is on the top of the stack.
-//bool
-//LuaLoadGeometrys(LuaInterpreter* pLuaInter,
-//	std::vector<std::unique_ptr<MeshGeometry>> *geoArr,	// store all the geometry
-//	ID3D12Device * mDevice,
-//	ID3D12GraphicsCommandList * mCmdList);
-
-// ensure that the assembleSet is on the top of the stack,
-// here will use a function to convert the MeshData to MeshGeoemtry
-// the user can modify the function to do different
-template<typename GEOMETRY>
-bool
-LuaLoadGeometrys(LuaInterpreter* pLuaInter,
-	std::vector<std::unique_ptr<GEOMETRY>> *geoArr,	// store all the geometry
-													// a function to convert the Lua::MeshData to MeshGeometry
-	std::function<std::unique_ptr<GEOMETRY>(std::string& name, Lua::MeshData *)> converter,
-	std::function<void(std::string, UINT startIndex, UINT endIndex)> subMeshCollector);
-
 // A debug function to show the Material data.
 void ShowDetail(Material & m);
 
-
-template<typename GEOMETRY>
+// ensure the geometryQueue is on the top of the stack,
+// 'converter' is the function to get the raw MeshData,
+// the user can pass any lambda function to convert the MeshData
+// to the desired data struct.
+// the subMeshCollector is the function to get submesh informations.
 bool 
 LuaLoadGeometrys(
-	LuaInterpreter * pLuaInter, 
-	std::vector<std::unique_ptr<GEOMETRY>>* geoArr, 
-	std::function<std::unique_ptr<GEOMETRY>(std::string&name, Lua::MeshData*)> converter, 
-	std::function<void(std::string, UINT startIndex, UINT endIndex)> subMeshCollector)
-{
-	// @ pLuaInter
-	pLuaInter	
-		->GetFieldOnTop("GeometryQueue")
-			// ---> foreach each geometry
-			->Foreach([&geoArr](LUA_INTERPRETER_FOEEACH_LAMBDA_ARGS) {
-				if (keyIsNumber)
-				{
-					DEBUG_MESSAGE("iterate a geometry index:%d\n", keyItg);
-					MeshData* pmd;
-
-					// @ pLuaInter
-					pLuaInter
-						->GetFieldOnTop("meshData")
-							->ToUserDataAndClear<Lua::MeshData>("LoadAssets.MeshData", pmd)
-						->GetFieldOnTop("SubMeshes")
-							// ---> for each subMesh there are two integer that we should get.
-							->Foreach([](LUA_INTERPRETER_FOEEACH_LAMBDA_ARGS) {
-								if (Not(keyIsNumber))
-								{
-									int startIndex = 0, endIndex = 0;
-									// @ pLuaInter
-									pLuaInter
-										->GetFieldOnTop("startIndex")
-											->ToIntegerAndPop(&startIndex)
-										->GetFieldOnTop("endIndex")
-											->ToIntegerAndPop(&endIndex);
-									subMeshCollector(std:;string(keyStr), startIndex, endIndex);
-								}// <==> end if keyIsNumber
-							});
-							// ---> end Foreach
-					geoArr->push_back(converter(pmd));
-					DEBUG_MESSAGE("geometry end");
-				}// <==> end if keyIsNumber
-			})
-			// ---> end Foreach
-		->Pop();// pop GeometryQueue
-	return true;
-}
+	LuaInterpreter * pLuaInter,
+	std::function<void(std::string&name, Lua::MeshData*)> 
+		converter, 
+	std::function<void(std::string&name, UINT startIndex, UINT endIndex)> 
+		subMeshCollector);
 
 }// namespace LoadAssets
 }// Lua
