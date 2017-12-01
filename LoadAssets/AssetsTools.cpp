@@ -15,33 +15,103 @@ namespace LoadAssets
 bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
 	std::vector<Material> * matArr)
 {
-	ASSERT(pLuaInter);
-	ASSERT(matArr);
+	pLuaInter->Foreach(
+		FOREACH_START
+			Formater<MaxNameLength> nameBuffer;
+			if (keyIsNumber)
+			{
+				Material mat;
+				EACH	->GetFieldOnTop("name")
+							->ToStringAndClear<nameBuffer.Size>(nameBuffer.bufferPointer())
+						->GetFieldOnTop("diffuseAlbedo")
+							->Foreach(
+								FOREACH_START
+									if (keyIsNumber)
+									{
+										auto diffuse = EACH->ToNumberAndPop<float>();
+										// be care that the keyItg in lua start from 1
+										// here we should substract one.
+										MAP_INDEX_TO_XYZW(diffuse, keyItg - 1, mat.DiffuseAlbedo);
+									}
+								FOREACH_END
+							)// end foreach 
+							->Pop() // pop the diffuseAlbedo table
+						->GetFieldOnTop("fresnelR")
+							->Foreach(
+								FOREACH_START
+									if (keyIsNumber)
+									{
+										auto fresnelR = EACH->ToNumberAndPop<float>();
+										// be care that the keyItg in lua start from 1
+										// here we should substract one.
+										MAP_INDEX_TO_XYZ(fresnelR, keyItg - 1, mat.FresnelR0);
+									}
+								FOREACH_END
+							)// end foreach fresnelR
+							->Pop() // pop the fresnelR table
+						->GetFieldOnTop("roughness")
+							->ToNumberAndPop(&mat.Roughness)
+						->GetFieldOnTop("diffuseMapIndex")
+							->If(
+								LUA_INTERPRETER_IF
+									return CONDITION_TARGET->IsNil();
+								LUA_INTERPRETER_THEN
+									// pop the nil
+									THEN_TARGET->Pop();
+									mat.DiffuseSrvHeapIndex = 0;
+								LUA_INTERPRETER_ELSE
+									ELSE_TARGET->ToIntegerAndPop(&mat.DiffuseSrvHeapIndex);
+								LUA_INTERPRETER_ENDIF
+							)
+						->GetFieldOnTop("normalMapIndex")
+							->If(
+								LUA_INTERPRETER_IF
+									return CONDITION_TARGET->IsNil();
+								LUA_INTERPRETER_THEN
+									// pop the nil
+									THEN_TARGET->Pop();
+									mat.NormalSrvHeapIndex = 0;
+								LUA_INTERPRETER_ELSE
+									ELSE_TARGET->ToIntegerAndPop(&mat.NormalSrvHeapIndex);
+								LUA_INTERPRETER_ENDIF
+							);
+				EACH->Pop();// pop the material
+			}// end if keyIsNumber
+		FOREACH_END
+	);// end foreach material
+	return false;
+}
 
-	Formater<MaxNameLength> formater;
+//bool LuaLoadMaterial(LuaInterpreter * pLuaInter,
+//	std::vector<Material> * matArr)
+//{
+//	ASSERT(pLuaInter);
+//	ASSERT(matArr);
+//
+//	Formater<MaxNameLength> formater;
+//
+//	pLuaInter->GetFieldOnTop("n");
+//
+//	int matCount = pLuaInter->ToIntegerAndPop<int>();
+//	printf("material count: %d\n", matCount);
+//	// n has been popped
+//
+//	// notice that the index start from 1.
+//	for (int i = 1; i <= matCount; ++i)
+//	{
+//		// get material
+//		pLuaInter->GetIndexOnTop(i);
+//
+//		// ensure the top is a material,
+//		// call the function to get one material.
+//		LuaLoadSingleMaterial(pLuaInter, matArr);
+//
+//		// pop the material
+//		pLuaInter->Pop();
+//	}
 
-	pLuaInter->GetFieldOnTop("n");
-
-	int matCount = pLuaInter->ToIntegerAndPop<int>();
-	printf("material count: %d\n", matCount);
-	// n has been popped
-
-	// notice that the index start from 1.
-	for (int i = 1; i <= matCount; ++i)
-	{
-		// get material
-		pLuaInter->GetIndexOnTop(i);
-
-		// ensure the top is a material,
-		// call the function to get one material.
-		LuaLoadSingleMaterial(pLuaInter, matArr);
-
-		// pop the material
-		pLuaInter->Pop();
-	}
-
-	return true;
-}// LuaLoadMaterial
+//	return true;
+//}// LuaLoadMaterial
 
 bool LuaLoadSingleMaterial(LuaInterpreter * pLuaInter,
 	std::vector<Material> * matArr)
