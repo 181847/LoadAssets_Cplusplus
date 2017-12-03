@@ -15,23 +15,71 @@ DECLARE_TEST_UNITS;
 static std::unique_ptr<Lua::LuaInterpreter> pLuaInter = std::make_unique<Lua::LuaInterpreter>();
 #define TEST_TARGET pLuaInter
 
-static const char * globalAssembleSetName = "assembleSet";
+static const char * 
+	globalAssembleSetName	= "assembleSet";
+static const char * 
+	materialQueueName		= "MaterialQueue";
+static const char * 
+	geometryQueueName		= "GeometryQueue";
 
 
-#define CHECK_XMFLOAT_4(xmfloat4, ex, ey, ez, ew)\
-		  (FT_EQ(xmfloat4.x, ex)	\
-		&& FT_EQ(xmfloat4.y, ey)	\
-		&& FT_EQ(xmfloat4.z, ez)	\
+#define CHECK_XMFLOAT_4(xmfloat4, ex, ey, ez, ew)	\
+		  (FT_EQ(xmfloat4.x, ex)					\
+		&& FT_EQ(xmfloat4.y, ey)					\
+		&& FT_EQ(xmfloat4.z, ez)					\
 		&& FT_EQ(xmfloat4.w, ew))
 
-#define CHECK_XMFLOAT_3(xmfloat3, ex, ey, ez)\
-		  (FT_EQ(xmfloat3.x, ex)	\
-		&& FT_EQ(xmfloat3.y, ey)	\
+#define CHECK_XMFLOAT_3(xmfloat3, ex, ey, ez)		\
+		  (FT_EQ(xmfloat3.x, ex)					\
+		&& FT_EQ(xmfloat3.y, ey)					\
 		&& FT_EQ(xmfloat3.z, ez))
 
-#define CHECK_XMFLOAT_2(xmfloat2, ex, ey)\\
-		  (FT_EQ(xmfloat2.x, ex)	\
+#define CHECK_XMFLOAT_2(xmfloat2, ex, ey)			\
+		  (FT_EQ(xmfloat2.x, ex)					\
 		&& FT_EQ(xmfloat2.y, ey))
+
+// next we will declare some simple struct to 
+// store the information to check certian test.
+namespace temp
+{
+
+struct SubMesh
+{
+	std::string name;
+	UINT startIndex;
+	UINT endIndex;
+	SubMesh(std::string n, UINT s, UINT e) 
+		:name(n), startIndex(s), endIndex(e){}
+
+	bool check(const std::string & n, UINT s, UINT e)
+	{
+		return name == n && startIndex == s && endIndex == e;
+	}
+
+	bool check(const char * n, UINT s, UINT e)
+	{
+		return check(std::string(n), s, e);
+	}
+};
+
+struct Geometry
+{
+	std::string name;
+	std::vector<SubMesh> subMeshs;
+	int checkCount = 0;
+
+	void checkSubMesh(const std::string& n, UINT s, UINT e)
+	{
+		int matchCount = 0;
+		for (auto & sm : subMeshs)
+		{
+			matchCount += sm.check(n, s, e);
+		}
+		if (matchCount == 1)
+			++checkCount;
+	}
+};
+}
 
 
 void TestUnit::GetReady()
@@ -50,9 +98,9 @@ void TestUnit::AddTestUnit()
 		return true;
 	TEST_UNIT_END;
 
-	TEST_UNIT_START("get materials")
+	TEST_UNIT_START("check load materials")
 		TEST_TARGET->GetGlobal(globalAssembleSetName)
-						->GetFieldOnTop("MaterialQueue");
+						->GetFieldOnTop(materialQueueName);
 		std::vector<Material> gmaterials;
 
 		Lua::LoadAssets::LuaLoadMaterial(TEST_TARGET.get(), &gmaterials);
@@ -100,6 +148,45 @@ void TestUnit::AddTestUnit()
 		}
 		return equal;
 	TEST_UNIT_END;
+
+	TEST_UNIT_START("check the result of the loading geometries")
+		TEST_TARGET
+		->GetGlobal(globalAssembleSetName)
+			->GetFieldOnTop(geometryQueueName);
+
+		temp::Geometry boxGeo;
+		boxGeo.name = "box";
+		boxGeo.subMeshs.push_back(temp::SubMesh("Box006", 37, 72));
+		boxGeo.subMeshs.push_back(temp::SubMesh("Box005", 1, 36));
+		boxGeo.subMeshs.push_back(temp::SubMesh("Box004", 73, 108));
+		temp::Geometry sphereGeo;
+		sphereGeo.name = "sphere";
+		sphereGeo.subMeshs.push_back(temp::SubMesh("group1 cube2", 25, 48));
+		sphereGeo.subMeshs.push_back(temp::SubMesh("cube1 group1", 1, 24));
+
+		std::unordered_map<std::string, temp::Geometry*> geos;
+
+		geos[boxGeo.name]		= &boxGeo;
+		geos[sphereGeo.name]	= &sphereGeo;
+		
+
+		UINT error = 0;
+		auto converter =
+			[&](const std::string & name, Lua::MeshData* pMesh)-> temp::Geometry* {
+				return geos[name];
+			};
+
+		auto subMeshCollector = 
+			[](temp::Geometry* pgeo, const std::string& name, UINT startIndex, UINT endIndex) {
+				pgeo->checkSubMesh(name, startIndex, endIndex);
+			};
+
+
+		Lua::LoadAssets::LuaLoadGeometries<temp::Geometry>(TEST_TARGET.get(), converter, subMeshCollector);
+
+		return geos["box"]->checkCount == 3 && geos["sphere"]->checkCount == 2;
+	TEST_UNIT_END;
+
 }
 
 
