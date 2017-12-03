@@ -81,13 +81,85 @@ void ShowDetail(Material & m);
 // the user can pass any lambda function to convert the MeshData
 // to the desired data struct.
 // the subMeshCollector is the function to get submesh informations.
+// On each meshdata finded, the meshdata will be pass into the converter,
+// and return some kind pointer the user defined,
+// then when he subMesh finded below the geomety, 
+// the the subMeshCollector will be called, and pass the 
+// GEOMETRY* pointer , subMesh's name, two index to the subMeshCollector.
+template<typename GEOMETRY>
 bool 
-LuaLoadGeometrys(
+LuaLoadGeometries(
 	LuaInterpreter * pLuaInter,
-	std::function<void(std::string&name, Lua::MeshData*)> 
+	std::function<GEOMETRY*(const std::string &, Lua::MeshData*)> 
 		converter, 
-	std::function<void(std::string&name, UINT startIndex, UINT endIndex)> 
+	std::function<void(GEOMETRY*, const std::string &, UINT, UINT)> 
 		subMeshCollector);
+
+template<typename GEOMETRY>
+bool 
+LuaLoadGeometries(
+	LuaInterpreter * pLuaInter,
+	std::function<GEOMETRY*(const std::string &, Lua::MeshData*)>
+	converter,
+	std::function<void(GEOMETRY*, const std::string &, UINT, UINT)>
+	subMeshCollector)
+{
+	pLuaInter->Foreach(
+		FOREACH_START
+			// GeometryQueue have one 'n' -> 'integer' ,
+			// we should pass it.
+			if (Not(keyIsNumber))
+				return;
+			// store ther name of geometry
+			Formater<256> nameBuffer;
+			// store the meshDataPointer
+			Lua::MeshData * pMeshData;
+			// have submeshes?
+			bool subMeshesIsNil = true;
+
+			EACH
+				->GetFieldOnTop("name")
+					->ToStringAndClear<nameBuffer.Size>(nameBuffer.bufferPointer())
+				->GetFieldOnTop("meshData")
+				->ToUserDataAndClear<Lua::MeshData>(
+					LuaMeshDataMetatableName,
+					&pMeshData,
+					[](void* pointer){
+						return reinterpret_cast<LuaPointerContainer<Lua::MeshData>*>(pointer)->pointer; })
+				->GetFieldOnTop("subMeshes")
+					->IsNil(&subMeshesIsNil); // later we will pop it
+
+			// convert the geometry
+			GEOMETRY * pUserGeo = converter(nameBuffer.bufferPointer(), pMeshData);
+
+			if (Not(subMeshesIsNil))
+			{
+				EACH // Geometry
+				->Foreach( // subMeshes table
+					FOREACH_START
+						if (Not(keyIsNumber))
+						{
+							UINT startIndex(0), endIndex(0);
+							EACH // submesh
+							->GetFieldOnTop("startIndex")
+								->ToIntegerAndPop(&startIndex)
+							->GetFieldOnTop("endIndex")
+								->ToIntegerAndPop(&endIndex);
+							
+							subMeshCollector(pUserGeo, keyStr, startIndex, endIndex);
+						}
+					FOREACH_END
+				);// end foreach subMesh
+			} // end if (haveSubMeshes)
+			else
+			{
+				EACH // Geometry
+					->Pop();		// pop the nil which is expected to the subMeshes table.
+			} // end else (haveSubMeshes)
+		FOREACH_END					// end foreach Geometry
+	);
+	return false;
+}// end LoadGeometries
 
 }// namespace LoadAssets
 }// Lua
